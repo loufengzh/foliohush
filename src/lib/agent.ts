@@ -89,7 +89,10 @@ export async function requestProposal(
     body: JSON.stringify({ action, instruction, context, providerHost }),
     signal,
   })
-  if (response.status === 409) throw new Error('The AI provider changed. Switch to offline mode, then reconnect and review the new provider before sending again.')
+  if (response.status === 409)
+    throw new Error(
+      'The AI provider changed. Switch to offline mode, then reconnect and review the new provider before sending again.',
+    )
   if (!response.ok)
     throw new Error(
       response.status === 404
