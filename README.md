@@ -112,3 +112,9 @@ Foliohush draws on the familiar, spacious feel of editorial writing tools. It is
 ## License
 
 Original project code is [MIT licensed](LICENSE), copyright 2026 loufengzh. Dependencies and bundled fonts retain their own licenses; see [Third-party notices](THIRD_PARTY_NOTICES.md).
+
+## Eight atmospheres, one writing desk
+
+Open **Appearance** (the palette icon in the top bar) to preview and select **Botanical**, **Parchment**, **Porcelain**, **Rosewater**, **Midnight**, **Forest**, **Ink**, or **Espresso**. Four light and four dark palettes cover the entire desk, including formatting menus, dialogs, links, code, highlights, and focus indicators. Parchment and Forest use an italic editorial title; Porcelain and Ink use a clean sans-serif writing face.
+
+**Follow system** switches between Botanical and Midnight as your operating system changes appearance. Your choice is saved separately from documents, follows other tabs on the same origin, and never changes export contents or snapshots. If browser storage is blocked, the theme still works for the current session and the picker explains that it cannot save the preference. Print output stays dark text on white paper.

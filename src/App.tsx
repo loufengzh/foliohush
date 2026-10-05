@@ -17,6 +17,7 @@ import {
   Menu,
   MoreHorizontal,
   Plus,
+  Palette,
   Redo2,
   Search,
   Undo2,
@@ -41,6 +42,8 @@ import {
   type WritingDocument,
 } from './lib/documents'
 import { welcomeContent } from './lib/sample'
+import { useTheme } from './lib/themes'
+import { ThemePicker } from './ThemePicker'
 
 function textContent(content: JSONContent): string {
   return (
@@ -144,6 +147,7 @@ function initialState(): { workspace: Workspace; error: string; raw: string | nu
   }
 }
 export default function App() {
+  const theme = useTheme()
   const [startup] = useState(initialState)
   const [workspace, setWorkspace] = useState(startup.workspace)
   const [error, setError] = useState(startup.error)
@@ -161,7 +165,7 @@ export default function App() {
   }, [])
   const [focus, setFocus] = useState(false)
   const [query, setQuery] = useState('')
-  const [modal, setModal] = useState<'export' | 'history' | 'help' | null>(null)
+  const [modal, setModal] = useState<'export' | 'history' | 'help' | 'theme' | null>(null)
   const [snapshotName, setSnapshotName] = useState('')
   const [notice, setNotice] = useState('')
   const [editor, setEditor] = useState<Editor | null>(null)
@@ -191,7 +195,7 @@ export default function App() {
     return () => {
       cancelled = true
     }
-  }, [current.id, current.title])
+  }, [current.id, current.title, theme.preference])
   const words = textContent(current.content).trim().split(/\s+/).filter(Boolean).length
   const headings: JSONContent[] = []
   const collectHeadings = (node: JSONContent) => {
@@ -517,6 +521,14 @@ export default function App() {
             <strong>{current.title || 'Untitled'}</strong>
           </div>
           <div className="topbar-actions">
+            <button
+              className="icon-button"
+              aria-label="Appearance"
+              title="Appearance"
+              onClick={() => setModal('theme')}
+            >
+              <Palette size={18} />
+            </button>
             <span
               className={`save-state ${saved ? '' : 'unsaved'}`}
               title="Stored in this browser only"
@@ -727,6 +739,11 @@ export default function App() {
       <div className={`toast ${notice ? 'visible' : ''}`} role="status" aria-live="polite">
         {notice}
       </div>
+      {modal === 'theme' && (
+        <Dialog title="Make room for your words" onClose={() => setModal(null)}>
+          <ThemePicker {...theme} />
+        </Dialog>
+      )}
       {modal === 'export' && (
         <Dialog title="Take your words with you" onClose={() => setModal(null)}>
           <p className="dialog-intro">

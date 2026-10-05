@@ -107,3 +107,9 @@ Anwendungshülle, Gestaltung, Slash-Menü, Snapshot-Ablauf, Validierung und Expo
 Das Design ist von großzügigen, redaktionellen Schreiboberflächen inspiriert. Foliohush ist nicht mit Medium verbunden, verwendet dessen Markenauftritt nicht und beansprucht die zugrunde liegende Editortechnik nicht als Eigenentwicklung.
 
 Der eigene Projektcode steht unter der [MIT-Lizenz](../LICENSE), Copyright 2026 loufengzh. Abhängigkeiten und Schriftarten behalten ihre jeweiligen Lizenzen; siehe [Drittanbieterhinweise](../THIRD_PARTY_NOTICES.md).
+
+## Acht Schreibatmosphären
+
+Über **Appearance** (das Palettensymbol in der Kopfleiste) lassen sich Botanical, Parchment, Porcelain, Rosewater, Midnight, Forest, Ink und Espresso auswählen. Vier helle und vier dunkle Designs umfassen den gesamten Schreibtisch: Menüs, Dialoge, Links, Code, Hervorhebungen und Fokusmarkierungen. Parchment und Forest verwenden einen kursiven Titel; Porcelain und Ink eine klare serifenlose Schrift.
+
+**Follow system** wechselt passend zum System zwischen Botanical und Midnight. Die Auswahl wird getrennt von Dokumenten gespeichert und zwischen Tabs derselben Herkunft synchronisiert. Dokumente, Schnappschüsse und Exporte bleiben unverändert. Ist der Browserspeicher gesperrt, gilt das Design für die aktuelle Sitzung; ein Hinweis erklärt die fehlende Speicherung. Ausdrucke verwenden dunklen Text auf weißem Papier.

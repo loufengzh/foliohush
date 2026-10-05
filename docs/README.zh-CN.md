@@ -107,3 +107,9 @@ Linux 上可能还需要执行 `npx playwright install --with-deps chromium` 以
 设计参考了宽松、简洁的编辑式写作界面。Foliohush 与 Medium 无关联，不使用其品牌，也不将上游编辑器技术宣称为原创。
 
 项目原创代码采用 [MIT 许可证](../LICENSE)，版权归 2026 loufengzh 所有。依赖和字体保留各自许可证，详见[第三方声明](../THIRD_PARTY_NOTICES.md)。
+
+## 八种书写氛围
+
+点击顶栏的调色板图标 **Appearance**，即可预览并选择 Botanical（植物）、Parchment（羊皮纸）、Porcelain（瓷白）、Rosewater（玫瑰水）、Midnight（午夜）、Forest（森林）、Ink（墨色）或 Espresso（浓缩咖啡）。四款浅色、四款深色主题覆盖整个界面，包括菜单、对话框、链接、代码、高亮和键盘焦点。Parchment 和 Forest 使用斜体标题；Porcelain 和 Ink 使用简洁的无衬线字体。
+
+**Follow system** 根据系统外观自动切换 Botanical / Midnight。偏好单独保存在浏览器中，同源标签页之间同步，不改动文档、快照或导出内容。存储不可用时，主题仍在当前会话生效，并显示提示。打印始终采用白底深色文字。
