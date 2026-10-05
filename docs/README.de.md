@@ -12,8 +12,8 @@ Foliohush ist eine Schreibanwendung mit lokaler Speicherung, großzügigem Layou
 
 ## Funktionen
 
-- **Ein übersichtlicher Schreibtisch.** Dokumentenliste, Titelsuche, Überschriftennavigation, Fokusmodus, Wortzahl und geschätzte Lesezeit.
-- **Formatierung direkt am Text.** Markiere Text für Fett, Kursiv, Durchstreichen, Hervorhebung, Inline-Code und Links. Über die Blockauswahl oder `/` in einem leeren Absatz fügst du Überschriften, Listen, Zitate, Codeblöcke und Trennlinien ein.
+- **Ein übersichtlicher Schreibtisch.** Klar gegliederte Dokumentenliste, Titelsuche, Überschriftennavigation, Fokusmodus, Wortzahl und geschätzte Lesezeit. Wichtige Bedienelemente bieten 44 px große Klickflächen; die Hauptoberfläche verwendet 15–16 px Schrift, der Schreibbereich 18 px. Die Titelhöhe passt sich dem Inhalt an.
+- **Formatierung direkt am Text.** **Bold** und **Italic** bleiben in der Dokumentleiste sichtbar. Markierter Text öffnet zusätzlich die schwebende Leiste für Fett, Kursiv, Durchstreichen, Hervorhebung, Inline-Code und Links. Über die Blockauswahl oder `/` in einem leeren Absatz fügst du Überschriften, Listen, Zitate, Codeblöcke und Trennlinien ein.
 - **Benannte Zwischenstände.** Speichere Snapshots manuell und stelle frühere Fassungen wieder her. Vor jeder Wiederherstellung wird der aktuelle Entwurf als Snapshot gesichert. Pro Dokument bleiben die neuesten 12 Snapshots erhalten.
 - **Automatisches Speichern im Browser.** Dokumente und Snapshots liegen gemeinsam in `localStorage`. Speicherfehler werden angezeigt; beschädigte oder inkompatible Daten werden nicht unbemerkt überschrieben. Vor jedem Schreiben werden die erwarteten Speicherdaten verglichen; Web Locks koordinieren beteiligte Tabs, sofern verfügbar. Erkannte Konflikte pausieren das Speichern.
 - **Dateien zum Mitnehmen.** JSON enthält ein Dokument samt Snapshots. Markdown und HTML dienen zum Lesen oder zur weiteren Veröffentlichung. Ein geprüfter JSON-Import erstellt immer ein neues Dokument. Bei Speicherfehlern kann ein TXT-Notfallexport den aktuellen Editorinhalt retten.
@@ -46,7 +46,7 @@ Die Ausgabe liegt in `dist/` und kann über einen statischen Webhost bereitgeste
 ## Schreiben, sichern, weiterarbeiten
 
 1. Klicke auf **New document** und gib der Seite einen Titel.
-2. Schreibe los. Markierter Text öffnet die schwebende Formatleiste.
+2. Schreibe los. Nutze **Bold** und **Italic** in der Dokumentleiste oder markiere Text für die schwebende Formatleiste.
 3. Tippe `/` in einen leeren Absatz. Filtere Blocktypen nach Namen, wähle mit den Pfeiltasten, füge mit Enter ein oder schließe mit Escape.
 4. Öffne vor größeren Änderungen **Snapshots**, gib einen Namen ein und wähle **Save snapshot**.
 5. Lade mit **Export → Full-fidelity backup** das aktuelle Dokument samt Snapshots als JSON herunter. Sichere mehrere Dokumente einzeln.
@@ -75,7 +75,7 @@ Die Wortzählung trennt Text an Leerraum. Die Lesezeit basiert auf etwa 220 Wör
 
 ## Umfang und Grenzen
 
-Foliohush ist für **textbasiertes Schreiben** gedacht: Absätze, Überschriften der Ebenen 1–3, Aufzählungen, nummerierte Listen, Zitate, Codeblöcke, Trennlinien und Inline-Formatierung. Bilder, Anhänge, Tabellen, eingebettete Inhalte, Zusammenarbeit, Veröffentlichungskonten, KI-Dienste sowie Markdown-/HTML-Dateiimporte werden nicht unterstützt. Die aktuelle Oberfläche bietet außerdem weder Dokumentlöschung noch einen Gesamtexport des Arbeitsbereichs.
+Foliohush ist für **textbasiertes Schreiben** gedacht: Absätze, Überschriften der Ebenen 1–3, Aufzählungen, nummerierte Listen, Zitate, Codeblöcke, Trennlinien und Inline-Formatierung. Bilder, Anhänge, Tabellen, eingebettete Inhalte, Zusammenarbeit, Veröffentlichungskonten, mitgelieferte KI-Dienste sowie Markdown-/HTML-Dateiimporte werden nicht unterstützt. Ein optionales, selbst betriebenes KI-Gateway ist unten beschrieben. Die aktuelle Oberfläche bietet außerdem weder Dokumentlöschung noch einen Gesamtexport des Arbeitsbereichs.
 
 Ein Arbeitsbereich enthält höchstens **50 Dokumente** mit jeweils **12 Snapshots**. Der gespeicherte Arbeitsbereich sowie jede importierte oder exportierte JSON-Datei sind auf **4 MiB** begrenzt. Browserlimits können niedriger liegen; Snapshots zählen zum Gesamtvolumen. Diese Grenzen dienen dem Schutz und garantieren keine flüssige Bearbeitung nahe am Limit.
 
@@ -93,7 +93,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Unter Linux können zusätzliche Systemabhängigkeiten nötig sein: `npx playwright install --with-deps chromium`. Im [verifizierten CI-Lauf](https://github.com/loufengzh/foliohush/actions/runs/37284170780) bestanden alle 24 Chromium-Tests für Desktop und mobile Emulation am Commit `b435db1`. In der Live-Demo wurden außerdem Textauswahl, Links und Neuladen am Desktop geprüft; Desktop- und mobile Screenshots wurden visuell kontrolliert. Umfang und offene Abdeckung stehen im [Prüfprotokoll, Englisch](verification.md). Spätere Commits benötigen einen eigenen erfolgreichen CI-Lauf.
+Unter Linux können zusätzliche Systemabhängigkeiten nötig sein: `npx playwright install --with-deps chromium`. Im [verifizierten CI-Lauf](https://github.com/loufengzh/foliohush/actions/runs/37284170780) bestanden alle 24 Chromium-Tests für Desktop und mobile Emulation am Commit `b435db1`. In der Live-Demo wurden außerdem Textauswahl, Links und Neuladen am Desktop geprüft; Desktop- und mobile Screenshots wurden visuell kontrolliert. Umfang und offene Abdeckung stehen im [Prüfprotokoll, Englisch](verification.md). Spätere Commits benötigen einen eigenen erfolgreichen CI-Lauf. Für die überarbeitete Oberfläche werden Prüfungen der Klickflächen, des Assistenten-Überlaufs und Screenshot-Regressionsprüfungen ergänzt; frühere Ergebnisse bestätigen diese Version nicht.
 
 - [Architektur und Komponentenintegration, Englisch](architecture.md)
 - [Beitragsleitfaden, Englisch](../CONTRIBUTING.md)
@@ -110,11 +110,13 @@ Der eigene Projektcode steht unter der [MIT-Lizenz](../LICENSE), Copyright 2026 
 
 ## Acht Schreibatmosphären
 
-Über **Appearance** (das Palettensymbol in der Kopfleiste) lassen sich Botanical, Parchment, Porcelain, Rosewater, Midnight, Forest, Ink und Espresso auswählen. Vier helle und vier dunkle Designs umfassen den gesamten Schreibtisch: Menüs, Dialoge, Links, Code, Hervorhebungen und Fokusmarkierungen. Parchment und Forest verwenden einen kursiven Titel; Porcelain und Ink eine klare serifenlose Schrift.
+Über die beschriftete Schaltfläche **Appearance** in der Kopfleiste lassen sich Botanical, Parchment, Porcelain, Rosewater, Midnight, Forest, Ink und Espresso auswählen. Vier helle und vier dunkle Designs umfassen den gesamten Schreibtisch: Menüs, Dialoge, Links, Code, Hervorhebungen und Fokusmarkierungen. Parchment und Forest verwenden einen kursiven Titel; Porcelain und Ink eine klare serifenlose Schrift.
 
 **Follow system** wechselt passend zum System zwischen Botanical und Midnight. Die Auswahl wird getrennt von Dokumenten gespeichert und zwischen Tabs derselben Herkunft synchronisiert. Dokumente, Schnappschüsse und Exporte bleiben unverändert. Ist der Browserspeicher gesperrt, gilt das Design für die aktuelle Sitzung; ein Hinweis erklärt die fehlende Speicherung. Ausdrucke verwenden dunklen Text auf weißem Papier.
 
 
 ## Schreibassistent
 
-Das Sternsymbol öffnet den Assistenten. Offline-Formatierung und die simulierte Gliederung funktionieren ohne Netzwerk; das Beispiel ist nicht KI-generiert. Markierten Text bearbeiten, Vorschläge prüfen, anwenden oder ablehnen und Änderungen rückgängig machen. Echte KI erfordert ein selbst betriebenes Gateway mit serverseitigem Schlüssel und eine bewusste Freigabe des Kontexts. Die öffentliche Demo hat keinen KI-Anbieter. Siehe [Einrichtung und Sicherheit](AI_AGENT.md).
+Die beschriftete Schaltfläche **Assistant** in der Kopfleiste öffnet den Assistenten; auch **Appearance** und **Focus** sind sichtbar beschriftet. Ab 1280 px Fensterbreite sitzt der Assistent neben dem Editor, der Arbeitsbereich schafft dafür Platz. Auf dem Smartphone füllt die Ansicht fast den ganzen Bildschirm: Die Schließen-Schaltfläche bleibt fest erreichbar, der Inhalt scrollt innerhalb der Ansicht, und **Apply** / **Reject** bleiben zugänglich.
+
+Offline-Formatierung und die simulierte Gliederung funktionieren ohne Netzwerk; das Beispiel ist nicht KI-generiert. Markierten Text bearbeiten, Vorschläge prüfen, anwenden oder ablehnen und Änderungen rückgängig machen. Echte KI erfordert ein selbst betriebenes Gateway mit serverseitigem Schlüssel und eine bewusste Freigabe des Kontexts. Die öffentliche Demo hat keinen KI-Anbieter. Siehe [Einrichtung und Sicherheit](AI_AGENT.md).

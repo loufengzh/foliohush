@@ -223,8 +223,14 @@ export function FolioEditor({
           from,
           to: selection.from,
           query,
-          left: Math.min(coords.left, window.innerWidth - 294),
-          top: Math.min(coords.bottom + 10, window.innerHeight - 330),
+          left: Math.min(
+            coords.left,
+            window.innerWidth - Math.min(320, window.innerWidth - 24) - 12,
+          ),
+          top: Math.min(
+            coords.bottom + 10,
+            window.innerHeight - Math.min(420, window.innerHeight * 0.65) - 12,
+          ),
         }
         if (slashRef.current.slash?.query !== query) setSelected(0)
         setSlash((old) =>

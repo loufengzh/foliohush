@@ -1,13 +1,18 @@
 # Architecture and editor integration
 
-Foliohush is a single, browser-only React application. It has no application server, authentication service, remote document store, analytics integration, or synchronization protocol. `FolioEditor` is reusable source code within this repository; there is no published `foliohush` npm package or stable external package API.
+Foliohush is a local-first React application. Its static public demo has no application server, authentication service, remote document store, analytics integration, or synchronization protocol. An optional self-hosted Node gateway enables explicitly requested AI calls with server-only credentials; it is not part of the public demo and does not provide document storage. See [AI_AGENT.md](AI_AGENT.md). `FolioEditor` is reusable source code within this repository; there is no published `foliohush` npm package or stable external package API.
 
 ## Source map
 
 | File                          | Responsibility                                                                                                               |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `src/App.tsx`                 | Workspace state, document selection, local-save status, app dialogs, import/export downloads, snapshots, outline, focus mode |
+| `src/App.tsx`                 | Workspace state, document selection, local-save status, app dialogs, persistent formatting controls, import/export downloads, snapshots, outline, focus mode |
 | `src/editor/FolioEditor.tsx` | Tiptap instance, editable body, selection toolbar, slash-command menu, link dialog                                           |
+| `src/AgentPanel.tsx`          | Assistant scope and mode controls, preview, consent, Apply/Reject, and responsive panel structure                             |
+| `src/ThemePicker.tsx`         | Eight-theme picker and system-preference selection                                                                         |
+| `src/lib/agent.ts`            | Offline/simulated suggestions, optional connected requests, and safe application                                            |
+| `src/lib/themes.ts`           | Theme tokens and separately persisted appearance preferences                                                                |
+| `server/`                    | Optional self-hosted AI gateway and gateway tests                                                                           |
 | `src/lib/documents.ts`        | Versioned data types, validation, storage helpers, snapshots, import, HTML and Markdown serialization                        |
 | `src/lib/sample.ts`           | Initial example document                                                                                                     |
 | `src/lib/documents.test.ts`   | Document, storage, import/export, and safety-bound tests                                                                     |
@@ -30,7 +35,7 @@ The data path is:
 
 Copy or import the component source into a compatible React/TypeScript application. It depends on Tiptap React/Core, StarterKit, Highlight, Placeholder, ProseMirror state through `@tiptap/pm`, Lucide, and the `isSafeUrl` / `validateContent` helpers in `src/lib/documents.ts`. Use the dependency versions in this repository's lockfile as a tested starting point rather than mixing unrelated Tiptap versions.
 
-The component does not store documents, create snapshots, export files, render a title, or provide the app-level block selector and undo/redo buttons. Those belong to `App` and the document helpers. The component does include its floating toolbar, slash commands, and link dialog.
+The component does not store documents, create snapshots, export files, render a title, or provide the app-level block selector, persistent Bold/Italic controls, and undo/redo buttons. Those belong to `App` and the document helpers. The component does include its floating toolbar, slash commands, and link dialog.
 
 ### Props
 
@@ -93,6 +98,16 @@ This example keeps the draft in memory only. Use `onRejectedEdit` to show reject
 Font imports live in `src/main.tsx`, not the component. Bring those imports across or choose host fonts. Preserve font licenses if you redistribute the fonts. The UI assumes a browser DOM; `immediatelyRender: false` delays initial editor rendering but is not a complete server-rendering integration. Run it as a client component when using a server-rendered framework.
 
 The component currently exposes no prop for custom extensions, menu commands, translation strings, CSS class names, or editor attributes. Adapt the source for those needs. Review keyboard behavior, dialog focus, mobile positioning, and screen-reader behavior in the host application; this repository does not claim an accessibility certification.
+
+## Workspace layout
+
+The application shell separates library navigation, writing controls, document content, and the assistant. The sidebar groups document search and the library; the top bar exposes labeled Assistant, Appearance, and Focus controls. The document toolbar keeps Bold and Italic available alongside the block selector and history controls, without replacing the editor's selection toolbar or shortcuts.
+
+Primary controls target 44 px hit areas. Main interface text is 15–16 px, with an 18 px writing body. The document-title textarea follows its content height rather than reserving an oversized fixed block; it is remeasured when layout or content changes.
+
+At widths of 1280 px and above, opening the assistant reserves space alongside the editor rather than covering the writing surface. On smaller screens it is an overlay; on phones it uses a near-full-screen sheet. The panel has a fixed close control and Apply/Reject action area with an independently scrolling inner region, so long previews do not push essential actions out of reach. Responsive layout rules live in `src/styles.css`; panel structure lives in `src/AgentPanel.tsx`.
+
+These presentation changes retain all eight themes, local persistence, selection formatting, and the existing assistant modes. Offline formatting and explicitly simulated suggestions work without provider calls. Connected AI remains an opt-in, preview-and-consent flow for deployments with the optional gateway; the static public demo supplies only offline and simulated behavior.
 
 ## Document and workspace model
 

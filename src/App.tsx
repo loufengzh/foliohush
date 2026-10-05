@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import type { Editor, JSONContent } from '@tiptap/react'
 import {
   ArrowDownToLine,
+  Bold,
+  Italic,
   ArrowLeft,
   ArrowUpRight,
   BookOpen,
@@ -191,14 +193,16 @@ export default function App() {
       }
     }
     resize()
+    window.addEventListener('resize', resize)
     let cancelled = false
     void document.fonts?.ready.then(() => {
       if (!cancelled) resize()
     })
     return () => {
       cancelled = true
+      window.removeEventListener('resize', resize)
     }
-  }, [current.id, current.title, theme.preference])
+  }, [current.id, current.title, theme.preference, agentOpen])
   const words = textContent(current.content).trim().split(/\s+/).filter(Boolean).length
   const headings: JSONContent[] = []
   const collectHeadings = (node: JSONContent) => {
@@ -390,7 +394,9 @@ export default function App() {
     }
   }
   return (
-    <div className={`app-shell ${focus ? 'focus-mode' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}>
+    <div
+      className={`app-shell ${focus ? 'focus-mode' : ''} ${sidebarOpen ? 'sidebar-open' : ''} ${agentOpen ? 'assistant-open' : ''}`}
+    >
       <a className="skip-link" href="#writing-desk">
         Skip to writing
       </a>
@@ -525,40 +531,36 @@ export default function App() {
           </div>
           <div className="topbar-actions">
             <button
-              className="icon-button"
+              className={`header-action assistant-toggle ${agentOpen ? 'is-active' : ''}`}
               aria-label="Writing assistant"
               title="Writing assistant"
               aria-expanded={agentOpen}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => setAgentOpen((value) => !value)}
             >
-              <Sparkles size={18} />
+              <Sparkles size={20} />
+              <span className="action-label">Assistant</span>
             </button>
             <button
-              className="icon-button"
+              className="header-action appearance-toggle"
               aria-label="Appearance"
               title="Appearance"
               onClick={() => setModal('theme')}
             >
-              <Palette size={18} />
+              <Palette size={20} />
+              <span className="action-label">Appearance</span>
             </button>
-            <span
-              className={`save-state ${saved ? '' : 'unsaved'}`}
-              title="Stored in this browser only"
-            >
-              {saved ? <Check size={13} /> : <Clock3 size={13} />}
-              <span>{saved ? 'Saved on this device' : 'Not saved'}</span>
-            </span>
             <button
-              className={`icon-button ${focus ? 'is-active' : ''}`}
+              className={`header-action focus-toggle ${focus ? 'is-active' : ''}`}
               aria-label={focus ? 'Exit focus mode' : 'Enter focus mode'}
               title="Focus mode (Ctrl/Cmd+Shift+F)"
               onClick={() => setFocus(!focus)}
             >
-              <Focus size={18} />
+              <Focus size={20} />
+              <span className="action-label">Focus</span>
             </button>
             <button className="export-button" onClick={() => setModal('export')}>
-              <ArrowDownToLine size={15} /> Export <ChevronDown size={13} />
+              <ArrowDownToLine size={19} /> Export <ChevronDown size={16} />
             </button>
           </div>
         </header>
@@ -570,36 +572,60 @@ export default function App() {
         )}
         <div className="editor-toolbar" aria-label="Document formatting" role="toolbar">
           <div className="toolbar-left">
-            <FileText size={15} />
-            <label className="visually-hidden" htmlFor="block-style">
-              Block style
-            </label>
-            <select
-              id="block-style"
-              value={format}
-              onChange={(e) => {
-                if (!editor) return
-                const value = e.target.value
-                const chain = editor.chain().focus()
-                if (value.startsWith('heading'))
-                  chain.setHeading({ level: Number(value.slice(-1)) as 1 | 2 | 3 }).run()
-                else if (value === 'bulletList') chain.toggleBulletList().run()
-                else if (value === 'orderedList') chain.toggleOrderedList().run()
-                else if (value === 'blockquote') chain.toggleBlockquote().run()
-                else if (value === 'codeBlock') chain.toggleCodeBlock().run()
-                else chain.clearNodes().setParagraph().run()
-              }}
-            >
-              <option value="paragraph">Text</option>
-              <option value="heading1">Heading 1</option>
-              <option value="heading2">Heading 2</option>
-              <option value="heading3">Heading 3</option>
-              <option value="bulletList">Bullet list</option>
-              <option value="orderedList">Numbered list</option>
-              <option value="blockquote">Quote</option>
-              <option value="codeBlock">Code block</option>
-            </select>
+            <div className="toolbar-format">
+              <FileText size={18} />
+              <label className="visually-hidden" htmlFor="block-style">
+                Block style
+              </label>
+              <select
+                id="block-style"
+                value={format}
+                onChange={(e) => {
+                  if (!editor) return
+                  const value = e.target.value
+                  const chain = editor.chain().focus()
+                  if (value.startsWith('heading'))
+                    chain.setHeading({ level: Number(value.slice(-1)) as 1 | 2 | 3 }).run()
+                  else if (value === 'bulletList') chain.toggleBulletList().run()
+                  else if (value === 'orderedList') chain.toggleOrderedList().run()
+                  else if (value === 'blockquote') chain.toggleBlockquote().run()
+                  else if (value === 'codeBlock') chain.toggleCodeBlock().run()
+                  else chain.clearNodes().setParagraph().run()
+                }}
+              >
+                <option value="paragraph">Text</option>
+                <option value="heading1">Heading 1</option>
+                <option value="heading2">Heading 2</option>
+                <option value="heading3">Heading 3</option>
+                <option value="bulletList">Bullet list</option>
+                <option value="orderedList">Numbered list</option>
+                <option value="blockquote">Quote</option>
+                <option value="codeBlock">Code block</option>
+              </select>
+            </div>
             <span className="toolbar-divider" />
+            <button
+              className="icon-button"
+              aria-label="Toggle bold"
+              title="Bold"
+              aria-pressed={editor?.isActive('bold') || false}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+            >
+              <Bold size={19} />
+            </button>
+            <button
+              className="icon-button"
+              aria-label="Toggle italic"
+              title="Italic"
+              aria-pressed={editor?.isActive('italic') || false}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+            >
+              <Italic size={19} />
+            </button>
+          </div>
+          <div className="toolbar-secondary">
             <button
               className="icon-button"
               aria-label="Undo"
@@ -616,12 +642,13 @@ export default function App() {
             >
               <Redo2 size={17} />
             </button>
+            <span className="toolbar-divider" />
+            <button className="history-button" onClick={() => setModal('history')}>
+              <History size={15} />
+              <span>Snapshots</span>
+              {current.snapshots.length > 0 && <b>{current.snapshots.length}</b>}
+            </button>
           </div>
-          <button className="history-button" onClick={() => setModal('history')}>
-            <History size={15} />
-            <span>Snapshots</span>
-            {current.snapshots.length > 0 && <b>{current.snapshots.length}</b>}
-          </button>
         </div>
         {agentOpen && editor && (
           <AgentPanel
@@ -642,7 +669,7 @@ export default function App() {
               ref={titleRef}
               className="document-title"
               aria-label="Document title"
-              rows={2}
+              rows={1}
               value={current.title}
               placeholder="Untitled"
               maxLength={200}
@@ -709,10 +736,15 @@ export default function App() {
           </aside>
         </div>
         <footer className="desk-footer">
-          <span>
-            <span className="footer-dot" /> YOUR WORDS STAY WITH YOU
+          <span
+            className={`save-state ${saved ? '' : 'unsaved'}`}
+            title="Stored in this browser only"
+          >
+            {saved ? <Check size={13} /> : <Clock3 size={13} />}
+            <span>{saved ? 'Saved on this device' : 'Not saved'}</span>
           </span>
-          <span>
+
+          <span className="footer-stats">
             {words} words <i /> {Math.max(1, Math.ceil(words / 220))} min read
           </span>
           <button aria-label="Writing help" onClick={() => setModal('help')}>

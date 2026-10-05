@@ -1,5 +1,18 @@
 # Verification record
 
+## Workspace redesign verification: pending
+
+The usability redesign adds larger primary controls, readable interface and document text, persistent Bold/Italic controls, content-sized titles, labeled workspace actions, and a responsive assistant. The coverage being added targets:
+
+- 44 px primary hit areas and readable computed font sizes at desktop and mobile viewports
+- Persistent Bold/Italic behavior alongside selection formatting and keyboard shortcuts
+- Long-title sizing, narrow layouts, and horizontal-overflow regressions
+- A docked assistant at desktop widths of 1280 px and above, without covering the editor
+- Phone-sized assistant sheets with a fixed close control, an internally scrolling preview, and reachable Apply/Reject actions
+- Desktop/mobile screenshot regression captures for the writing surface and the open assistant, including long preview content
+
+These are coverage additions, not a report of passing results. The current redesign has no CI result recorded here yet. Run the checks against the final revision and visually inspect its screenshots before marking it verified. Historical theme-release screenshots and passes below do not establish the redesigned layout's behavior.
+
 ## Theme release verification
 
 [CI run 37287214973](https://github.com/loufengzh/foliohush/actions/runs/37287214973) passed **87 unit/jsdom tests and 54 Playwright cases** at commit [`630230b`](https://github.com/loufengzh/foliohush/commit/630230bc12f0f612f667ea37ef05e23c24b09f33). Type checking and the production build passed too.
@@ -8,9 +21,9 @@ The theme checks cover all eight palettes in desktop and Pixel 7-emulated Chromi
 
 All eight workspace and picker screenshots were visually reviewed in both projects. See the [desktop theme gallery](screenshots/themes-desktop.jpg) and [mobile theme gallery](screenshots/themes-mobile.jpg). These screenshots show the sample document; the mobile picker scrolls internally on short viewports.
 
-The local shell cannot start Chromium because its sandbox blocks Chromium's singleton socket. Browser assertions and screenshot generation therefore run through the repository's GitHub Actions workflow. This is separate from the successful local type checking, formatting, unit/jsdom tests, and production build.
+During theme-release verification, the local shell could not start Chromium because its sandbox blocked Chromium's singleton socket. Browser assertions and screenshot generation therefore ran through the repository's GitHub Actions workflow. This was separate from the successful local type checking, formatting, unit/jsdom tests, and production build; it is not a claim about the current executor.
 
-Results apply to the named revision. Check the [current CI runs](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) for subsequent changes. Later edits, including print and floating-toolbar focus regression coverage, require their own passing run.
+Results apply to the named revision. Check the [current CI runs](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) for subsequent changes. Later edits, including print, floating-toolbar focus, and workspace-layout regression coverage, require their own passing run.
 
 ## What the checks cover
 

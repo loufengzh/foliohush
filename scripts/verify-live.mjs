@@ -20,6 +20,21 @@ try {
       return route.abort()
     })
     await page.goto(url, { waitUntil: 'networkidle' })
+    await page.screenshot({ path: `live-test-results/${name}-workspace.png`, fullPage: true })
+    for (const label of ['Writing assistant', 'Appearance', 'Enter focus mode', 'Export']) {
+      const control = page.getByRole('button', { name: label, exact: true })
+      const rect = await control.boundingBox()
+      expect(rect?.width).toBeGreaterThanOrEqual(44)
+      expect(rect?.height).toBeGreaterThanOrEqual(44)
+    }
+    expect(
+      await page
+        .locator('.folio-editor')
+        .evaluate((node) => parseFloat(getComputedStyle(node).fontSize)),
+    ).toBeGreaterThanOrEqual(18)
+    await page.getByRole('button', { name: 'Appearance', exact: true }).click()
+    await page.screenshot({ path: `live-test-results/${name}-appearance.png`, fullPage: true })
+    await page.getByRole('button', { name: 'Close dialog', exact: true }).click()
     const menu = page.getByRole('button', { name: 'Open document sidebar' })
     if (await menu.isVisible()) await menu.click()
     await page.getByRole('button', { name: /New document/ }).click()
@@ -32,6 +47,13 @@ try {
     )
     await page.waitForTimeout(4600) // Let the transient new-document notice fade.
     await page.screenshot({ path: `live-test-results/${name}-assistant.png`, fullPage: true })
+    await expect(page.getByRole('button', { name: 'Apply suggestion' })).toBeInViewport()
+    await expect(page.getByRole('button', { name: 'Close writing assistant' })).toBeInViewport()
+    if (name === 'desktop') {
+      const paper = await page.locator('.paper').boundingBox()
+      const assistant = await page.locator('.agent-panel').boundingBox()
+      expect(paper.x + paper.width).toBeLessThanOrEqual(assistant.x)
+    }
     await page.getByRole('button', { name: 'Apply suggestion' }).click()
     await page.getByRole('button', { name: 'Close writing assistant' }).click()
     await expect(body.locator('h2')).toHaveText('A calm beginning')

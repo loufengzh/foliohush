@@ -12,8 +12,8 @@ Foliohush is a local-first writing app with an editorial layout, thoughtful typo
 
 ## What is here
 
-- **A comfortable writing desk.** A document library, title search, heading outline, focus mode, word count, and estimated reading time.
-- **Formatting where you need it.** Select text for bold, italic, strikethrough, highlight, inline code, and links. Use the block selector or type `/` on an empty paragraph for headings, lists, quotes, code blocks, and dividers.
+- **A comfortable writing desk.** A structured document library and title search, heading outline, focus mode, word count, and estimated reading time. Primary controls have 44 px targets, the main UI uses 15–16 px text, and the writing body uses 18 px text. Titles grow with their content.
+- **Formatting where you need it.** Bold and Italic stay available in the document toolbar. Select text for the floating toolbar with bold, italic, strikethrough, highlight, inline code, and links. Use the block selector or type `/` on an empty paragraph for headings, lists, quotes, code blocks, and dividers.
 - **Your own version checkpoints.** Save named snapshots and restore an earlier draft. A restore first saves the current draft as a recovery snapshot. Each document retains its latest 12 snapshots.
 - **Browser-local autosave.** Documents and snapshots are stored together in `localStorage`. Storage errors are surfaced and incompatible stored data is not silently overwritten. Expected stored bytes are checked before each write; Web Locks serialize cooperating tabs where supported. Detected conflicts pause saving.
 - **Portable copies.** JSON preserves a document and its snapshots. Markdown and HTML are reading/publishing exports. Validated JSON imports always create a new document. When saving fails, an emergency TXT export can preserve the current editor text.
@@ -46,7 +46,7 @@ The build is written to `dist/`. Serve that directory from a static web host; `n
 ## A small writing guide
 
 1. Choose **New document**, then give the page a title.
-2. Write normally. Select words to reveal the floating formatting bar.
+2. Write normally. Use **Bold** and **Italic** in the document toolbar, or select words to reveal the floating formatting bar.
 3. Type `/` at the beginning of an empty paragraph to choose a block. Filter by name, use the arrow keys, press Enter to insert, or Escape to dismiss.
 4. Open **Snapshots** before a large revision. Name the moment and choose **Save snapshot**.
 5. Use **Export → Full-fidelity backup** to download a JSON copy of the current document and its snapshots. Repeat for each document you want to preserve.
@@ -77,7 +77,7 @@ The word count splits text on whitespace. Reading time uses roughly 220 words pe
 
 ## Scope and limits
 
-Foliohush is for **text-based writing**. It includes paragraphs, headings 1–3, bullet/numbered lists, quotes, code blocks, horizontal rules, and inline formatting. It intentionally does not include images, file attachments, tables, embeds, collaboration, publishing accounts, AI services, or Markdown/HTML file import. The current UI also has no document deletion or whole-workspace export.
+Foliohush is for **text-based writing**. It includes paragraphs, headings 1–3, bullet/numbered lists, quotes, code blocks, horizontal rules, and inline formatting. It intentionally does not include images, file attachments, tables, embeds, collaboration, publishing accounts, bundled AI services, or Markdown/HTML file import. An optional self-hosted AI gateway is described below. The current UI also has no document deletion or whole-workspace export.
 
 The workspace holds up to **50 documents**, with **12 snapshots per document**. The stored workspace and each JSON import/export are limited to **4 MiB**. Browser quotas may be lower, and snapshots count toward the workspace size. These are safety bounds, not a promise that editing near the limits will be fast.
 
@@ -95,7 +95,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-On Linux, Playwright may also need system dependencies (`npx playwright install --with-deps chromium`). The [verified CI run](https://github.com/loufengzh/foliohush/actions/runs/37284170780) passed all 24 desktop/mobile-emulated Chromium tests at commit `b435db1`. The live demo also received desktop selection, link, and reload checks; desktop/mobile screenshots were visually reviewed. See the [verification record](docs/verification.md) for scope and remaining coverage. Later commits require their own passing CI run.
+On Linux, Playwright may also need system dependencies (`npx playwright install --with-deps chromium`). The [verified CI run](https://github.com/loufengzh/foliohush/actions/runs/37284170780) passed all 24 desktop/mobile-emulated Chromium tests at commit `b435db1`. The live demo also received desktop selection, link, and reload checks; desktop/mobile screenshots were visually reviewed. See the [verification record](docs/verification.md) for scope and remaining coverage. Later commits require their own passing CI run. Target-size, assistant-overflow, and screenshot regression coverage is being added for the workspace redesign; these historical results do not verify it.
 
 - [Architecture and editor integration](docs/architecture.md): component API, document schema, persistence, and extension boundaries
 - [Verification record](docs/verification.md): tested revisions, browser coverage, and remaining QA
@@ -119,13 +119,15 @@ Original project code is [MIT licensed](LICENSE), copyright 2026 loufengzh. Depe
 
 [Mobile theme gallery](docs/screenshots/themes-mobile.jpg)
 
-Open **Appearance** (the palette icon in the top bar) to preview and select **Botanical**, **Parchment**, **Porcelain**, **Rosewater**, **Midnight**, **Forest**, **Ink**, or **Espresso**. Four light and four dark palettes cover the entire desk, including formatting menus, dialogs, links, code, highlights, and focus indicators. Parchment and Forest use an italic editorial title; Porcelain and Ink use a clean sans-serif writing face.
+Open the labeled **Appearance** control in the top bar to preview and select **Botanical**, **Parchment**, **Porcelain**, **Rosewater**, **Midnight**, **Forest**, **Ink**, or **Espresso**. Four light and four dark palettes cover the entire desk, including formatting menus, dialogs, links, code, highlights, and focus indicators. Parchment and Forest use an italic editorial title; Porcelain and Ink use a clean sans-serif writing face.
 
 **Follow system** switches between Botanical and Midnight as your operating system changes appearance. Your choice is saved separately from documents, follows other tabs on the same origin, and never changes export contents or snapshots. If browser storage is blocked, the theme still works for the current session and the picker explains that it cannot save the preference. Print output stays dark text on white paper.
 
 
 ## Writing assistant
 
-Open **Writing assistant** (sparkle icon) to preview before changing a draft. Offline formatting converts plain-text Markdown headings and bullets without network access. The simulated outline is explicitly a fixed example, not AI output. Select text first to limit scope; applying and undoing stay in the editor history. Document changes invalidate pending suggestions.
+Open the labeled **Assistant** control in the top bar to preview before changing a draft. At desktop widths of 1280 px and above, the assistant docks beside the editor and the workspace makes room for it. On phones it becomes a near-full-screen sheet with a fixed close control, a scrolling inner panel, and reachable **Apply** / **Reject** actions. The labeled **Appearance** and **Focus** controls stay easy to find.
 
-Real AI runs only when you deliberately select **Connected AI**, review the context, consent, and send. GitHub Pages contains no AI provider or API key. Self-host the optional Node gateway with server-only credentials: [setup, security, provider contract, and multilingual guidance](docs/AI_AGENT.md). No provider calls are needed for tests.
+Offline formatting converts plain-text Markdown headings and bullets without network access. The simulated outline is explicitly a fixed example, not AI output. Select text first to limit scope; applying and undoing stay in the editor history. Document changes invalidate pending suggestions.
+
+Real AI runs only when you deliberately select **Connected AI**, review the context, consent, and send. The public GitHub Pages demo supports offline formatting and simulated suggestions only; it contains no AI provider or API key. Self-host the optional Node gateway with server-only credentials: [setup, security, provider contract, and multilingual guidance](docs/AI_AGENT.md). No provider calls are needed for tests.

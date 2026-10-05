@@ -240,176 +240,184 @@ export function AgentPanel({
           <X size={18} />
         </button>
       </div>
-      <p className="agent-intro">
-        Your words stay yours. Review every suggestion before it touches the page.
-      </p>
-      <label>
-        Assistant mode
-        <select
-          aria-label="Assistant mode"
-          value={mode}
-          disabled={busy}
-          onChange={(e) => {
-            setMode(e.target.value)
-            setProposal(null)
-            setConsent(false)
-          }}
-        >
-          <option value="offline">Offline formatting · no AI</option>
-          <option value="demo">Simulated outline · no AI</option>
-          <option value="gateway">Connected AI · self-hosted gateway</option>
-        </select>
-      </label>
-      {mode === 'gateway' && (
-        <>
-          <p className="agent-note">
-            {providerHost ? `Provider: ${providerHost}. ` : gatewayStatus + ' '}Requires your own
-            server gateway at /api/agent. The public demo has no AI provider. Never enter an API key
-            here.
-          </p>
-          <label>
-            Writing task
-            <select
-              aria-label="Writing task"
-              value={action}
-              disabled={busy}
-              onChange={(e) => {
-                setAction(e.target.value as AgentAction)
-                setProposal(null)
-              }}
-            >
-              <option value="outline">Build an outline</option>
-              <option value="continue">Continue writing</option>
-              <option value="rewrite">Rewrite / change tone</option>
-              <option value="format">Organize and format</option>
-            </select>
-          </label>
-          <label>
-            Your instructions
-            <textarea
-              aria-label="Agent instructions"
-              maxLength={1000}
-              value={instruction}
-              disabled={busy}
-              placeholder="Keep my voice. Make this clearer and warmer…"
-              onChange={(e) => {
-                setInstruction(e.target.value)
-                setProposal(null)
-              }}
-            />
-          </label>
-        </>
-      )}
-      <label>
-        Context scope
-        <select
-          aria-label="Context scope"
-          value={scope}
-          disabled={busy}
-          onChange={(e) => {
-            setScope(e.target.value)
-            setProposal(null)
-            setConsent(false)
-          }}
-        >
-          <option value="selection">Selected text only</option>
-          <option value="document">Current document body</option>
-        </select>
-      </label>
-      <details className="agent-context">
-        <summary>Review context · {context.length.toLocaleString()} / 12,000 characters</summary>
-        <pre>{context.slice(0, MAX_CONTEXT)}</pre>
-      </details>
-      {mode === 'gateway' && (
-        <label className="agent-consent">
-          <input
-            type="checkbox"
-            checked={consent}
+      <div className="agent-scroll">
+        <p className="agent-intro">
+          Your words stay yours. Review every suggestion before it touches the page.
+        </p>
+        <label>
+          Assistant mode
+          <select
+            aria-label="Assistant mode"
+            value={mode}
             disabled={busy}
-            onChange={(e) => setConsent(e.target.checked)}
-          />
-          Send only the context above and my instructions to{' '}
-          {providerHost || 'this host’s configured AI provider'}. Provider charges and data policies
-          may apply.
+            onChange={(e) => {
+              setMode(e.target.value)
+              setProposal(null)
+              setConsent(false)
+            }}
+          >
+            <option value="offline">Offline formatting · no AI</option>
+            <option value="demo">Simulated outline · no AI</option>
+            <option value="gateway">Connected AI · self-hosted gateway</option>
+          </select>
         </label>
-      )}
-      {mode === 'offline' && (
-        <p className="agent-note">
-          Converts # headings and - bullets from plain text. Replaces inline styles in the chosen
-          scope. No network request.
-        </p>
-      )}
-      {mode === 'demo' && (
-        <p className="agent-note">
-          A fixed example outline, not AI-generated. Nothing leaves this browser.
-        </p>
-      )}
-      <div className="agent-actions">
-        <button
-          className="primary-button"
-          disabled={busy || blocked || (mode === 'gateway' && (!consent || !providerHost))}
-          onClick={() => void generate()}
-        >
-          {busy ? 'Preparing…' : mode === 'gateway' ? 'Send to AI & preview' : 'Preview suggestion'}
-        </button>
-        {busy && (
-          <button className="secondary-button" onClick={cancel}>
-            Cancel request
+        {mode === 'gateway' && (
+          <>
+            <p className="agent-note">
+              {providerHost ? `Provider: ${providerHost}. ` : gatewayStatus + ' '}Requires your own
+              server gateway at /api/agent. The public demo has no AI provider. Never enter an API
+              key here.
+            </p>
+            <label>
+              Writing task
+              <select
+                aria-label="Writing task"
+                value={action}
+                disabled={busy}
+                onChange={(e) => {
+                  setAction(e.target.value as AgentAction)
+                  setProposal(null)
+                }}
+              >
+                <option value="outline">Build an outline</option>
+                <option value="continue">Continue writing</option>
+                <option value="rewrite">Rewrite / change tone</option>
+                <option value="format">Organize and format</option>
+              </select>
+            </label>
+            <label>
+              Your instructions
+              <textarea
+                aria-label="Agent instructions"
+                maxLength={1000}
+                value={instruction}
+                disabled={busy}
+                placeholder="Keep my voice. Make this clearer and warmer…"
+                onChange={(e) => {
+                  setInstruction(e.target.value)
+                  setProposal(null)
+                }}
+              />
+            </label>
+          </>
+        )}
+        <label>
+          Context scope
+          <select
+            aria-label="Context scope"
+            value={scope}
+            disabled={busy}
+            onChange={(e) => {
+              setScope(e.target.value)
+              setProposal(null)
+              setConsent(false)
+            }}
+          >
+            <option value="selection">Selected text only</option>
+            <option value="document">Current document body</option>
+          </select>
+        </label>
+        <details className="agent-context">
+          <summary>Review context · {context.length.toLocaleString()} / 12,000 characters</summary>
+          <pre>{context.slice(0, MAX_CONTEXT)}</pre>
+        </details>
+        {mode === 'gateway' && (
+          <label className="agent-consent">
+            <input
+              type="checkbox"
+              checked={consent}
+              disabled={busy}
+              onChange={(e) => setConsent(e.target.checked)}
+            />
+            Send only the context above and my instructions to{' '}
+            {providerHost || 'this host’s configured AI provider'}. Provider charges and data
+            policies may apply.
+          </label>
+        )}
+        {mode === 'offline' && (
+          <p className="agent-note">
+            Converts # headings and - bullets from plain text. Replaces inline styles in the chosen
+            scope. No network request.
+          </p>
+        )}
+        {mode === 'demo' && (
+          <p className="agent-note">
+            A fixed example outline, not AI-generated. Nothing leaves this browser.
+          </p>
+        )}
+        <div className="agent-actions">
+          <button
+            className="primary-button"
+            disabled={busy || blocked || (mode === 'gateway' && (!consent || !providerHost))}
+            onClick={() => void generate()}
+          >
+            {busy
+              ? 'Preparing…'
+              : mode === 'gateway'
+                ? 'Send to AI & preview'
+                : 'Preview suggestion'}
           </button>
+          {busy && (
+            <button className="secondary-button" onClick={cancel}>
+              Cancel request
+            </button>
+          )}
+        </div>
+        {error && (
+          <p role="status" className="agent-note">
+            {error}
+          </p>
+        )}
+        {proposal && (
+          <section className="agent-proposal" aria-label="Suggestion preview">
+            <h3>Suggestion preview</h3>
+            <p>{proposal.summary}</p>
+            <p className="agent-note">
+              {mode !== 'offline' &&
+              (snapshot?.action === 'outline' || snapshot?.action === 'continue')
+                ? 'Inserts after this scope.'
+                : 'Replaces this scope.'}{' '}
+              Review facts and tone before applying.
+            </p>
+            <div className="agent-blocks">
+              {proposal.blocks.map((block, i) =>
+                block.type === 'heading' ? (
+                  <h4 key={i}>{block.text}</h4>
+                ) : block.type === 'bullet' ? (
+                  <ul key={i}>
+                    <li>{block.text}</li>
+                  </ul>
+                ) : (
+                  <p key={i}>{block.text}</p>
+                ),
+              )}
+            </div>
+            {stale && (
+              <p role="alert">
+                Your document or selection changed. Preview a fresh suggestion before applying.
+              </p>
+            )}
+          </section>
+        )}
+        {blocked && (
+          <p role="alert">Resolve the storage warning before applying assistant changes.</p>
         )}
       </div>
-      {error && (
-        <p role="status" className="agent-note">
-          {error}
-        </p>
-      )}
       {proposal && (
-        <section className="agent-proposal" aria-label="Suggestion preview">
-          <h3>Suggestion preview</h3>
-          <p>{proposal.summary}</p>
-          <p className="agent-note">
-            {mode !== 'offline' &&
-            (snapshot?.action === 'outline' || snapshot?.action === 'continue')
-              ? 'Inserts after this scope.'
-              : 'Replaces this scope.'}{' '}
-            Review facts and tone before applying.
-          </p>
-          <div className="agent-blocks">
-            {proposal.blocks.map((block, i) =>
-              block.type === 'heading' ? (
-                <h4 key={i}>{block.text}</h4>
-              ) : block.type === 'bullet' ? (
-                <ul key={i}>
-                  <li>{block.text}</li>
-                </ul>
-              ) : (
-                <p key={i}>{block.text}</p>
-              ),
-            )}
-          </div>
-          {stale && (
-            <p role="alert">
-              Your document or selection changed. Preview a fresh suggestion before applying.
-            </p>
-          )}
-          <div className="agent-actions">
-            <button className="primary-button" disabled={stale || blocked} onClick={apply}>
-              Apply suggestion
-            </button>
-            <button
-              className="secondary-button"
-              onClick={() => {
-                setProposal(null)
-                setSnapshot(null)
-              }}
-            >
-              Reject
-            </button>
-          </div>
-        </section>
-      )}
-      {blocked && (
-        <p role="alert">Resolve the storage warning before applying assistant changes.</p>
+        <div className="agent-actions agent-review-actions">
+          <button className="primary-button" disabled={stale || blocked} onClick={apply}>
+            Apply suggestion
+          </button>
+          <button
+            className="secondary-button"
+            onClick={() => {
+              setProposal(null)
+              setSnapshot(null)
+            }}
+          >
+            Reject
+          </button>
+        </div>
       )}
     </aside>
   )
