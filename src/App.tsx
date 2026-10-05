@@ -425,7 +425,10 @@ export default function App() {
           YOUR WRITING SPACE<span>LOCAL</span>
         </div>
         <button className="new-document" onClick={newDocument}>
-          <Plus size={18} /> New document <span>↗</span>
+          <Plus size={18} /> New document{' '}
+          <span>
+            <ArrowUpRight size={16} />
+          </span>
         </button>
         <label className="search-box">
           <Search size={16} />

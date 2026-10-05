@@ -288,7 +288,7 @@ export function FolioEditor({
     <>
       <EditorContent editor={editor} />
       {editable && (
-        <BubbleMenu editor={editor} options={bubbleOptions}>
+        <BubbleMenu editor={editor} options={bubbleOptions} updateDelay={0}>
           <div
             className="bubble-toolbar"
             role="toolbar"

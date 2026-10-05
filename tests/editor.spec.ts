@@ -84,6 +84,15 @@ test('JSON import creates a separate document and invalid imports do not change 
   await newPage(page)
   await page.getByLabel('Document title').fill('Original')
   await body(page).fill('Keep these words')
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.stringify(
+          JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents[0].content,
+        ),
+      ),
+    )
+    .toContain('Keep these words')
   const source = await page.evaluate(
     () => JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents[0],
   )
@@ -91,23 +100,29 @@ test('JSON import creates a separate document and invalid imports do not change 
   await page
     .getByLabel('Import JSON document')
     .setInputFiles({ name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(data) })
+  await expect(page.getByRole('status')).toContainText('Imported as a new document')
   await expect(body(page)).toHaveText('Keep these words')
-  expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents.length,
-    ),
-  ).toBe(3)
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents.length,
+      ),
+    )
+    .toBe(3)
   await page.getByLabel('Import JSON document').setInputFiles({
     name: 'bad.json',
     mimeType: 'application/json',
     buffer: Buffer.from('{broken'),
   })
+  await expect(page.getByRole('status')).toContainText('not valid JSON')
   await expect(body(page)).toHaveText('Keep these words')
-  expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents.length,
-    ),
-  ).toBe(3)
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents.length,
+      ),
+    )
+    .toBe(3)
 })
 test('export generates portable JSON and dialog cancellation preserves typing', async ({
   page,
@@ -174,6 +189,7 @@ test('formatting selection works and unsafe links are rejected', async ({ page }
   await expect(body(page).locator('strong')).toContainText('Words to emphasize')
   await body(page).click()
   await body(page).press('ControlOrMeta+a')
+  await expect(page.getByRole('toolbar', { name: 'Format selected text' })).toBeVisible()
   await page.getByRole('button', { name: 'Link', exact: true }).click()
   await page.getByLabel('Link address').fill('javascript:alert(1)')
   await page.getByRole('button', { name: 'Save link', exact: true }).click()
