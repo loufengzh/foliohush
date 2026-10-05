@@ -253,8 +253,11 @@ test('bubble toolbar keyboard focus contrasts against each actual theme backgrou
     for (const active of [false, true]) {
       if (active) {
         await bold.press('Enter')
-        // The formatting action deliberately returns focus to the editor on the next frame.
-        // Wait for that handoff before testing keyboard focus on the active toolbar button.
+        // Tiptap focuses immediately on Android, then refocuses its view in an animation frame.
+        // Flush that scheduled handoff before checking focus and revisiting the active button.
+        await page.evaluate(
+          () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
+        )
         await expect(editorBody(page)).toBeFocused()
       }
       await bold.focus()
