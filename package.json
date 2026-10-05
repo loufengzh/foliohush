@@ -13,7 +13,9 @@
     "preview": "vite preview --host 127.0.0.1",
     "format": "prettier --write src tests scripts *.ts *.json index.html .github",
     "format:check": "prettier --check src tests scripts *.ts *.json index.html .github",
-    "check": "npm run format:check && npm run typecheck && npm test && npm run build"
+    "check": "npm run format:check && npm run typecheck && npm test && npm run test:gateway && npm run build",
+    "agent:server": "node --env-file-if-exists=.env.agent server/index.mjs",
+    "test:gateway": "node --test server/*.test.mjs"
   },
   "engines": {
     "node": ">=22.12"

@@ -113,3 +113,8 @@ Der eigene Projektcode steht unter der [MIT-Lizenz](../LICENSE), Copyright 2026 
 Über **Appearance** (das Palettensymbol in der Kopfleiste) lassen sich Botanical, Parchment, Porcelain, Rosewater, Midnight, Forest, Ink und Espresso auswählen. Vier helle und vier dunkle Designs umfassen den gesamten Schreibtisch: Menüs, Dialoge, Links, Code, Hervorhebungen und Fokusmarkierungen. Parchment und Forest verwenden einen kursiven Titel; Porcelain und Ink eine klare serifenlose Schrift.
 
 **Follow system** wechselt passend zum System zwischen Botanical und Midnight. Die Auswahl wird getrennt von Dokumenten gespeichert und zwischen Tabs derselben Herkunft synchronisiert. Dokumente, Schnappschüsse und Exporte bleiben unverändert. Ist der Browserspeicher gesperrt, gilt das Design für die aktuelle Sitzung; ein Hinweis erklärt die fehlende Speicherung. Ausdrucke verwenden dunklen Text auf weißem Papier.
+
+
+## Schreibassistent
+
+Das Sternsymbol öffnet den Assistenten. Offline-Formatierung und die simulierte Gliederung funktionieren ohne Netzwerk; das Beispiel ist nicht KI-generiert. Markierten Text bearbeiten, Vorschläge prüfen, anwenden oder ablehnen und Änderungen rückgängig machen. Echte KI erfordert ein selbst betriebenes Gateway mit serverseitigem Schlüssel und eine bewusste Freigabe des Kontexts. Die öffentliche Demo hat keinen KI-Anbieter. Siehe [Einrichtung und Sicherheit](AI_AGENT.md).

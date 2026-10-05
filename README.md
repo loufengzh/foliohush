@@ -122,3 +122,10 @@ Original project code is [MIT licensed](LICENSE), copyright 2026 loufengzh. Depe
 Open **Appearance** (the palette icon in the top bar) to preview and select **Botanical**, **Parchment**, **Porcelain**, **Rosewater**, **Midnight**, **Forest**, **Ink**, or **Espresso**. Four light and four dark palettes cover the entire desk, including formatting menus, dialogs, links, code, highlights, and focus indicators. Parchment and Forest use an italic editorial title; Porcelain and Ink use a clean sans-serif writing face.
 
 **Follow system** switches between Botanical and Midnight as your operating system changes appearance. Your choice is saved separately from documents, follows other tabs on the same origin, and never changes export contents or snapshots. If browser storage is blocked, the theme still works for the current session and the picker explains that it cannot save the preference. Print output stays dark text on white paper.
+
+
+## Writing assistant
+
+Open **Writing assistant** (sparkle icon) to preview before changing a draft. Offline formatting converts plain-text Markdown headings and bullets without network access. The simulated outline is explicitly a fixed example, not AI output. Select text first to limit scope; applying and undoing stay in the editor history. Document changes invalidate pending suggestions.
+
+Real AI runs only when you deliberately select **Connected AI**, review the context, consent, and send. GitHub Pages contains no AI provider or API key. Self-host the optional Node gateway with server-only credentials: [setup, security, provider contract, and multilingual guidance](docs/AI_AGENT.md). No provider calls are needed for tests.

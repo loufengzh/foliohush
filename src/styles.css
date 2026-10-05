@@ -1632,3 +1632,131 @@ select:focus-visible {
     display: none !important;
   }
 }
+
+/* Review-first writing assistant; shares every theme token with the editor. */
+.agent-panel {
+  position: fixed;
+  z-index: 35;
+  right: 18px;
+  top: 78px;
+  bottom: 20px;
+  width: min(390px, calc(100vw - 24px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 22px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 18px 70px #0003;
+}
+.agent-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.agent-heading h2 {
+  flex: 1;
+  font:
+    22px/1.2 'Libre Caslon Text',
+    serif;
+  margin: 0;
+}
+.agent-heading h2:focus {
+  outline: none;
+}
+.agent-intro,
+.agent-note,
+.agent-proposal > p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.agent-panel label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 10px;
+}
+.agent-panel select,
+.agent-panel textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+.agent-panel textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+.agent-context {
+  margin: 18px 0;
+  font-size: 12px;
+}
+.agent-context summary {
+  cursor: pointer;
+}
+.agent-context pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid var(--line);
+  font: 12px/1.5 inherit;
+}
+.agent-panel .agent-consent {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.agent-consent input {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+}
+.agent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.agent-proposal {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  padding-top: 8px;
+}
+.agent-blocks {
+  overflow-wrap: anywhere;
+  font:
+    15px/1.65 'Libre Caslon Text',
+    serif;
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+}
+.agent-blocks h4 {
+  font-size: 20px;
+  line-height: 1.3;
+}
+.agent-blocks ul {
+  padding-left: 20px;
+}
+.agent-panel button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .agent-panel {
+    right: 12px;
+    top: 68px;
+    bottom: 12px;
+    padding: 18px;
+  }
+}

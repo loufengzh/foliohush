@@ -20,6 +20,7 @@ import {
   Palette,
   Redo2,
   Search,
+  Sparkles,
   Undo2,
   X,
 } from 'lucide-react'
@@ -44,6 +45,7 @@ import {
 import { welcomeContent } from './lib/sample'
 import { useTheme } from './lib/themes'
 import { ThemePicker } from './ThemePicker'
+import { AgentPanel } from './AgentPanel'
 
 function textContent(content: JSONContent): string {
   return (
@@ -164,6 +166,7 @@ export default function App() {
     return () => media.removeEventListener('change', update)
   }, [])
   const [focus, setFocus] = useState(false)
+  const [agentOpen, setAgentOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [modal, setModal] = useState<'export' | 'history' | 'help' | 'theme' | null>(null)
   const [snapshotName, setSnapshotName] = useState('')
@@ -523,6 +526,16 @@ export default function App() {
           <div className="topbar-actions">
             <button
               className="icon-button"
+              aria-label="Writing assistant"
+              title="Writing assistant"
+              aria-expanded={agentOpen}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setAgentOpen((value) => !value)}
+            >
+              <Sparkles size={18} />
+            </button>
+            <button
+              className="icon-button"
               aria-label="Appearance"
               title="Appearance"
               onClick={() => setModal('theme')}
@@ -610,6 +623,14 @@ export default function App() {
             {current.snapshots.length > 0 && <b>{current.snapshots.length}</b>}
           </button>
         </div>
+        {agentOpen && editor && (
+          <AgentPanel
+            key={`${current.id}-${editorEpoch}`}
+            editor={editor}
+            blocked={!!error}
+            onClose={() => setAgentOpen(false)}
+          />
+        )}
         <div className="desk-layout">
           <article className="paper">
             <div className="document-kicker">
@@ -905,7 +926,9 @@ export default function App() {
             <Leaf size={20} />
             <p>
               No account. No analytics. No cloud sync. Documents are stored in this browser, and
-              clearing site data removes them. Keep a JSON backup of work that matters.
+              clearing site data removes them. Keep a JSON backup of work that matters. The optional
+              AI gateway receives only the context you explicitly choose to send. Offline tools send
+              nothing.
             </p>
           </div>
         </Dialog>

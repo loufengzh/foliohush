@@ -113,3 +113,8 @@ Linux 上可能还需要执行 `npx playwright install --with-deps chromium` 以
 点击顶栏的调色板图标 **Appearance**，即可预览并选择 Botanical（植物）、Parchment（羊皮纸）、Porcelain（瓷白）、Rosewater（玫瑰水）、Midnight（午夜）、Forest（森林）、Ink（墨色）或 Espresso（浓缩咖啡）。四款浅色、四款深色主题覆盖整个界面，包括菜单、对话框、链接、代码、高亮和键盘焦点。Parchment 和 Forest 使用斜体标题；Porcelain 和 Ink 使用简洁的无衬线字体。
 
 **Follow system** 根据系统外观自动切换 Botanical / Midnight。偏好单独保存在浏览器中，同源标签页之间同步，不改动文档、快照或导出内容。存储不可用时，主题仍在当前会话生效，并显示提示。打印始终采用白底深色文字。
+
+
+## 写作助手
+
+点击星光按钮打开写作助手。离线格式化和模拟提纲无需联网；模拟内容不是 AI 生成的。可仅处理选中文字，预览后应用或拒绝，并通过撤销恢复。真实 AI 需要自行托管的网关和服务端密钥，发送前须确认共享范围。公开演示不提供 AI 服务。详见 [配置与安全指南](AI_AGENT.md)。
