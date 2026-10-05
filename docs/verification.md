@@ -1,8 +1,8 @@
 # Verification record
 
-## Workspace redesign verification: pending
+## Workspace redesign verification
 
-The usability redesign adds larger primary controls, readable interface and document text, persistent Bold/Italic controls, content-sized titles, labeled workspace actions, and a responsive assistant. The coverage being added targets:
+The usability redesign adds larger primary controls, readable interface and document text, persistent Bold/Italic controls, content-sized titles, labeled workspace actions, and a responsive assistant. The added coverage targets:
 
 - 44 px primary hit areas and readable computed font sizes at desktop and mobile viewports
 - Persistent Bold/Italic behavior alongside selection formatting and keyboard shortcuts
@@ -11,7 +11,11 @@ The usability redesign adds larger primary controls, readable interface and docu
 - Phone-sized assistant sheets with a fixed close control, an internally scrolling preview, and reachable Apply/Reject actions
 - Desktop/mobile screenshot regression captures for the writing surface and the open assistant, including long preview content
 
-These are coverage additions, not a report of passing results. The current redesign has no CI result recorded here yet. Run the checks against the final revision and visually inspect its screenshots before marking it verified. Historical theme-release screenshots and passes below do not establish the redesigned layout's behavior.
+[CI run 37349994848](https://github.com/loufengzh/foliohush/actions/runs/37349994848) passed at source commit [`7a2f45d`](https://github.com/loufengzh/foliohush/commit/7a2f45da00902322f4b97418f411a9c032dd5f31): **130 unit/jsdom tests, 23 gateway tests, and 111 Chromium browser cases**, with 7 intentional project-specific skips. Type checking and production build also passed. The viewport matrix covers 360, 412, 768, 1024, and 1440 px; rail tests additionally cover 1280 px.
+
+Fresh [desktop](screenshots/desktop.png), [mobile](screenshots/mobile.png), [desktop assistant](screenshots/assistant-desktop.png), and [mobile assistant](screenshots/assistant-mobile.png) captures were inspected. Screenshot review caught conditional navigation controls appearing in the wrong modes; dedicated regressions now cover the corrected visibility and focus transitions. Long-title header overflow and undersized search text were corrected without weakening the checks.
+
+Local formatting, type checking, and production build passed. Local unit execution was interrupted after severe host delays and timeouts; it is **not** reported as passing. The full unit, gateway, and real-browser results above come from GitHub Actions. This verifies the named source revision; subsequent changes need their own CI result. Mobile emulation remains distinct from physical-device testing.
 
 ## Theme release verification
 
