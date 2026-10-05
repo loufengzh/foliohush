@@ -14,8 +14,13 @@ async function capture(page: Page, testInfo: TestInfo, name: string) {
   await testInfo.attach(name, { path, contentType: 'image/png' })
 }
 
-function luminance(hex: string) {
-  const channels = [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255)
+function luminance(color: string) {
+  const channels = color.startsWith('#')
+    ? [1, 3, 5].map((offset) => parseInt(color.slice(offset, offset + 2), 16) / 255)
+    : color
+        .match(/[\d.]+/g)!
+        .slice(0, 3)
+        .map((channel) => Number(channel) / 255)
   const linear = channels.map((value) =>
     value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4,
   )
@@ -228,4 +233,100 @@ test('reduced motion keeps appearance controls and editing usable', async ({ pag
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'midnight')
   await editorBody(page).fill('A quiet change, with reduced motion.')
   await expect(editorBody(page)).toHaveText('A quiet change, with reduced motion.')
+})
+
+test('bubble toolbar keyboard focus contrasts against each actual theme background', async ({
+  page,
+}) => {
+  for (const theme of THEMES) {
+    await appearance(page).click()
+    await picker(page).getByRole('button', { name: theme.name, exact: true }).click()
+    await page.keyboard.press('Escape')
+    await editorBody(page).evaluate((element) => {
+      const editor = (element as HTMLElement & { editor: Editor }).editor
+      editor.commands.setContent('<p>Focus stays visible.</p>')
+    })
+    await editorBody(page).press('ControlOrMeta+a')
+    const toolbar = page.getByRole('toolbar', { name: 'Format selected text' })
+    await expect(toolbar).toBeVisible()
+    const bold = toolbar.getByRole('button', { name: 'Bold', exact: true })
+    for (const active of [false, true]) {
+      if (active) await bold.press('Enter')
+      await bold.focus()
+      await expect(bold).toBeFocused()
+      await expect(bold).toHaveAttribute('aria-pressed', String(active))
+      const style = await bold.evaluate((element) => {
+        const computed = getComputedStyle(element)
+        let surface: Element | null = element
+        let background = computed.backgroundColor
+        while (surface && (background === 'transparent' || background === 'rgba(0, 0, 0, 0)')) {
+          surface = surface.parentElement
+          if (surface) background = getComputedStyle(surface).backgroundColor
+        }
+        return {
+          focusVisible: element.matches(':focus-visible'),
+          shadow: computed.boxShadow,
+          color: computed.color,
+          background,
+        }
+      })
+      expect(style.focusVisible, `${theme.name}: keyboard focus is visible`).toBe(true)
+      expect(style.shadow).toContain('inset')
+      const ringColor = style.shadow.match(/rgba?\([^)]+\)/)?.[0]
+      expect(ringColor, `${theme.name}: focus ring has a computed color`).toBe(style.color)
+      expect(
+        contrast(ringColor!, style.background),
+        `${theme.name}: ${active ? 'active' : 'inactive'} toolbar focus ring`,
+      ).toBeGreaterThanOrEqual(3)
+    }
+  }
+})
+
+test('dark themes print code and list markers with readable ink on light surfaces', async ({
+  page,
+}) => {
+  await editorBody(page).evaluate((element) => {
+    const editor = (element as HTMLElement & { editor: Editor }).editor
+    editor.commands.setContent(
+      '<p>Inline <code>readable()</code> code.</p><pre><code>print("hello")</code></pre>' +
+        '<ul><li><p>A printed list item.</p></li></ul>',
+    )
+  })
+  for (const theme of THEMES.filter((item) => item.mode === 'dark')) {
+    await appearance(page).click()
+    await picker(page).getByRole('button', { name: theme.name, exact: true }).click()
+    await page.keyboard.press('Escape')
+    await page.emulateMedia({ media: 'print' })
+    const printed = await editorBody(page).evaluate((element) => {
+      const pre = getComputedStyle(element.querySelector('pre')!)
+      const inlineCode = getComputedStyle(element.querySelector('p > code')!)
+      const codeBlock = getComputedStyle(element.querySelector('pre > code')!)
+      return {
+        canvas: getComputedStyle(document.documentElement).backgroundColor,
+        body: getComputedStyle(document.body).backgroundColor,
+        pre: { foreground: pre.color, background: pre.backgroundColor },
+        inlineCode: { foreground: inlineCode.color, background: inlineCode.backgroundColor },
+        codeBlock: { foreground: codeBlock.color, background: codeBlock.backgroundColor },
+        marker: getComputedStyle(element.querySelector('li')!, '::marker').color,
+      }
+    })
+    expect(printed.canvas).toBe('rgb(255, 255, 255)')
+    expect(printed.body).toBe('rgb(255, 255, 255)')
+    for (const [name, style] of Object.entries({
+      pre: printed.pre,
+      inlineCode: printed.inlineCode,
+      codeBlock: printed.codeBlock,
+    })) {
+      expect(
+        contrast(style.foreground, style.background),
+        `${theme.name}: printed ${name}`,
+      ).toBeGreaterThanOrEqual(4.5)
+    }
+    expect(
+      contrast(printed.marker, printed.body),
+      `${theme.name}: printed list marker`,
+    ).toBeGreaterThanOrEqual(4.5)
+    await page.emulateMedia({ media: 'screen' })
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme.id)
+  }
 })

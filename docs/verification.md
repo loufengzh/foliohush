@@ -1,19 +1,16 @@
 # Verification record
 
-## Verified revision
+## Theme release verification
 
-[CI run 37284170780](https://github.com/loufengzh/foliohush/actions/runs/37284170780) passed **all 24 Playwright tests** across desktop and mobile-emulated Chromium projects at commit [`b435db19afe09e5eaa3a706ee457cf7018348959`](https://github.com/loufengzh/foliohush/commit/b435db19afe09e5eaa3a706ee457cf7018348959).
+[CI run 37287214973](https://github.com/loufengzh/foliohush/actions/runs/37287214973) passed **87 unit/jsdom tests and 54 Playwright cases** at commit [`630230b`](https://github.com/loufengzh/foliohush/commit/630230bc12f0f612f667ea37ef05e23c24b09f33). Type checking and the production build passed too.
 
-The [live demo](https://loufengzh.github.io/foliohush/) also received manual desktop checks for text selection, links, and persistence across reload. Desktop and mobile screenshots were visually inspected for the sample document's layout, typography, and overflow.
+The theme checks cover all eight palettes in desktop and Pixel 7-emulated Chromium, persisted and invalid preferences, system appearance changes, real cross-tab preference synchronization, unchanged document bytes and undo history, keyboard dialog focus and repeated dismissal, reduced motion, and horizontal overflow. Resolved theme tokens are checked at 4.5:1 for normal text, selection, highlights, and errors, and 3:1 for focus indicators on the corresponding surfaces.
 
-These results apply to the tested revision. For subsequent revisions, check the [current CI runs](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml). Later code or test changes require their own passing run; a historical result is not a claim that the latest commit is green.
+All eight workspace and picker screenshots were visually reviewed in both projects. See the [desktop theme gallery](screenshots/themes-desktop.jpg) and [mobile theme gallery](screenshots/themes-mobile.jpg). These screenshots show the sample document; the mobile picker scrolls internally on short viewports.
 
-## Screenshots
+The local shell cannot start Chromium because its sandbox blocks Chromium's singleton socket. Browser assertions and screenshot generation therefore run through the repository's GitHub Actions workflow. This is separate from the successful local type checking, formatting, unit/jsdom tests, and production build.
 
-- [Desktop workspace](screenshots/desktop.png)
-- [Mobile-emulated workspace](screenshots/mobile.png)
-
-These are actual Chromium captures from commit `5fa88cb`, not generated mockups. The inspected layout is unchanged in the verified revision above. The screenshots show sample content and are evidence of those captured layouts, not every possible document or browser state.
+Results apply to the named revision. Check the [current CI runs](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) for subsequent changes. Later edits, including print and floating-toolbar focus regression coverage, require their own passing run.
 
 ## What the checks cover
 
@@ -28,7 +25,7 @@ Local type checking and the unit/jsdom suite passed during development. Use the 
 
 ### Passed Chromium coverage
 
-The 24-test run exercises the following flows across the two configured projects:
+The original editor cases exercise the following flows across the two configured projects:
 
 - Sample rendering, title, and horizontal overflow
 - Title/body persistence across reload; empty-title editing and spaces

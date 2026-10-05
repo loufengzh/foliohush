@@ -1398,6 +1398,10 @@ body {
 .bubble-toolbar button {
   color: var(--on-accent);
 }
+.bubble-toolbar button:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px currentColor;
+}
 .bubble-toolbar button:hover:not(:disabled),
 .bubble-toolbar button[aria-pressed='true'] {
   background: var(--ink);
@@ -1607,6 +1611,7 @@ select:focus-visible {
 @media print {
   :root {
     color-scheme: light !important;
+    background: white !important;
   }
   body,
   .app-shell {
@@ -1614,10 +1619,13 @@ select:focus-visible {
   }
   .document-title,
   .folio-editor,
-  .folio-editor * {
+  .folio-editor *,
+  .folio-editor li::marker {
     color: #222 !important;
   }
-  .folio-editor mark {
+  .folio-editor mark,
+  .folio-editor pre,
+  .folio-editor code {
     background: #eee !important;
   }
   .modal-backdrop {
