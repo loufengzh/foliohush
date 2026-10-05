@@ -202,7 +202,7 @@ export default function App() {
       cancelled = true
       window.removeEventListener('resize', resize)
     }
-  }, [current.id, current.title, theme.preference, agentOpen])
+  }, [current.id, current.title, theme.preference, agentOpen, focus])
   const words = textContent(current.content).trim().split(/\s+/).filter(Boolean).length
   const headings: JSONContent[] = []
   const collectHeadings = (node: JSONContent) => {

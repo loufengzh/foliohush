@@ -315,7 +315,7 @@ button:hover:not(:disabled) {
   gap: 10px;
   min-height: 44px;
   padding: 10px 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   width: 100%;
   text-align: left;
@@ -760,7 +760,7 @@ select option {
   align-items: center;
   min-height: 44px;
   text-align: left;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--muted);
   padding: 10px 10px 10px 14px;
@@ -1528,7 +1528,7 @@ select option {
   color: var(--ink);
   border-radius: 10px;
   padding: 12px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
 }
@@ -1538,7 +1538,7 @@ select option {
 }
 .agent-context {
   margin: 18px 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .agent-context summary {
@@ -1572,7 +1572,7 @@ select option {
   align-items: flex-start;
   gap: 12px;
   min-height: 44px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.6;
   padding: 12px;
@@ -1637,6 +1637,7 @@ select option {
   margin: 0 0 18px;
 }
 .agent-review-actions {
+  margin-top: 0;
   flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
@@ -1906,7 +1907,7 @@ select option {
     margin-left: auto;
   }
   .history-button {
-    font-size: 13px;
+    font-size: 14px;
     padding: 0 8px;
   }
   .desk-layout,

@@ -91,7 +91,7 @@ test('offline formatting previews, rejects, applies, undoes, and persists withou
   await panel(page).getByRole('button', { name: 'Preview suggestion' }).click()
   await expect(preview(page)).toContainText('A quiet beginning')
   expect(await documentJSON(page)).toEqual(original)
-  await preview(page).getByRole('button', { name: 'Reject', exact: true }).click()
+  await panel(page).getByRole('button', { name: 'Reject', exact: true }).click()
   await expect(preview(page)).toHaveCount(0)
   expect(await documentJSON(page)).toEqual(original)
   await panel(page).getByRole('button', { name: 'Preview suggestion' }).click()

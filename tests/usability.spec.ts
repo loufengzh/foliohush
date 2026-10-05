@@ -145,6 +145,13 @@ for (const width of [360, 412, 768, 1024, 1440]) {
     await page.evaluate(() => window.scrollTo(0, 0))
     await openAssistant(page)
     await expectInsideViewport(assistant(page), page)
+    await expect
+      .poll(() =>
+        page
+          .getByLabel('Document title')
+          .evaluate((element) => element.scrollHeight - element.clientHeight),
+      )
+      .toBeLessThanOrEqual(1)
     await expectNoHorizontalOverflow(page)
     await capture(page, testInfo, `assistant-${width}px`)
     await assistant(page).getByRole('button', { name: 'Close writing assistant' }).click()
