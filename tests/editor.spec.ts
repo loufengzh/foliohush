@@ -1,3 +1,4 @@
+import type { Editor } from '@tiptap/react'
 import { test, expect, type Page } from '@playwright/test'
 const body = (page: Page) => page.getByRole('textbox', { name: 'Document body' })
 async function newPage(page: Page) {
@@ -180,6 +181,42 @@ test('focus mode and repeated modal opening stay usable', async ({ page }) => {
   }
   await expect(body(page)).toBeVisible()
 })
+async function selectionCheckpoint(page: Page, stage: string) {
+  console.log(
+    stage,
+    await page.evaluate(() => {
+      const element = document.querySelector('.folio-editor') as
+        (HTMLElement & { editor?: Editor }) | null
+      const editor = element?.editor
+      const view = editor?.view
+      const diagnosticView = view as unknown as
+        | {
+            pluginViews?: {
+              pluginKey?: string
+              isVisible?: boolean
+              element?: HTMLElement
+              getShouldShow?: () => boolean
+            }[]
+          }
+        | undefined
+      return {
+        selection: editor?.state.selection.toJSON(),
+        focused: view?.hasFocus(),
+        composing: view?.composing,
+        nativeSelection: window.getSelection()?.toString(),
+        active: document.activeElement?.getAttribute('aria-label'),
+        menus: diagnosticView?.pluginViews
+          ?.filter((item) => item.pluginKey)
+          .map((item) => ({
+            key: String(item.pluginKey),
+            visible: item.isVisible,
+            connected: item.element?.isConnected,
+            shouldShow: item.getShouldShow?.(),
+          })),
+      }
+    }),
+  )
+}
 test('formatting selection works and unsafe links are rejected', async ({ page }) => {
   await newPage(page)
   await body(page).fill('Words to emphasize')
@@ -187,8 +224,11 @@ test('formatting selection works and unsafe links are rejected', async ({ page }
   await expect(page.getByRole('toolbar', { name: 'Format selected text' })).toBeVisible()
   await page.getByRole('button', { name: 'Bold', exact: true }).click()
   await expect(body(page).locator('strong')).toContainText('Words to emphasize')
+  await selectionCheckpoint(page, 'after-bold')
   await body(page).click()
+  await selectionCheckpoint(page, 'after-body-click')
   await body(page).press('ControlOrMeta+a')
+  await selectionCheckpoint(page, 'after-reselect')
   await expect(page.getByRole('toolbar', { name: 'Format selected text' })).toBeVisible()
   await page.getByRole('button', { name: 'Link', exact: true }).click()
   await page.getByLabel('Link address').fill('javascript:alert(1)')
@@ -197,6 +237,15 @@ test('formatting selection works and unsafe links are rejected', async ({ page }
   await page.getByLabel('Link address').fill('https://example.com')
   await page.getByRole('button', { name: 'Save link', exact: true }).click()
   await expect(body(page).locator('a')).toHaveAttribute('href', 'https://example.com')
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.stringify(
+          JSON.parse(localStorage.getItem('foliohush.workspace.v1')!).documents[0].content,
+        ),
+      ),
+    )
+    .toContain('https://example.com/')
   await page.reload()
   await expect(body(page).locator('a')).toHaveAttribute('href', 'https://example.com/')
 })
