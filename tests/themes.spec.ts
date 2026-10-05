@@ -251,7 +251,12 @@ test('bubble toolbar keyboard focus contrasts against each actual theme backgrou
     await expect(toolbar).toBeVisible()
     const bold = toolbar.getByRole('button', { name: 'Bold', exact: true })
     for (const active of [false, true]) {
-      if (active) await bold.press('Enter')
+      if (active) {
+        await bold.press('Enter')
+        // The formatting action deliberately returns focus to the editor on the next frame.
+        // Wait for that handoff before testing keyboard focus on the active toolbar button.
+        await expect(editorBody(page)).toBeFocused()
+      }
       await bold.focus()
       await expect(bold).toBeFocused()
       await expect(bold).toHaveAttribute('aria-pressed', String(active))
