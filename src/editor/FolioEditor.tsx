@@ -244,7 +244,7 @@ export function FolioEditor({
     },
   })
   useEffect(() => {
-    editor?.setEditable(editable)
+    if (editor && editor.isEditable !== editable) editor.setEditable(editable, false)
   }, [editor, editable])
   const active = useEditorState({
     editor,

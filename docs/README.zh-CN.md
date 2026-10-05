@@ -6,6 +6,10 @@ Foliohush 是一款本地优先的写作应用，采用留白充足的阅读式�
 
 [English](../README.md) · 简体中文 · [Русский](README.ru.md) · [Deutsch](README.de.md)
 
+[在线演示](https://loufengzh.github.io/foliohush/) · [GitHub](https://github.com/loufengzh/foliohush) · [CI](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) · [移动端截图](screenshots/mobile.png)
+
+![Foliohush 桌面写作界面](screenshots/desktop.png)
+
 ## 现有功能
 
 - **专注的写作空间：** 文档列表、按标题搜索、标题大纲、专注模式、字词计数和预计阅读时间。
@@ -15,7 +19,7 @@ Foliohush 是一款本地优先的写作应用，采用留白充足的阅读式�
 - **可携带的文件：** JSON 保存文档和快照；Markdown 与 HTML 适合阅读或后续发布。通过校验的 JSON 始终导入为新文档。保存失败时可使用紧急 TXT 导出保留当前编辑器中的文字。
 - **可复用的源码组件：** `FolioEditor` 提供带类型的回调、占位文字和可编辑／只读模式。
 
-这是一个应用仓库，尚未作为 npm 组件包发布，也没有随仓库提供的在线演示。应用界面目前为英文；本文件是使用文档的中文版本。
+这是一个应用仓库，尚未作为 npm 组件包发布。应用界面目前为英文；本文件是使用文档的中文版本。
 
 ## 本地运行
 
@@ -89,7 +93,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Linux 上可能还需要执行 `npx playwright install --with-deps chromium` 以安装浏览器系统依赖。CI 已配置类型检查、单元／jsdom 测试、生产构建和 Chromium 浏览器测试。真实浏览器与视觉验证仍待完成；jsdom 不能替代视觉浏览器。详见[验证记录（英文）](verification.md)。仓库提供工作流并不意味着远程 CI 已运行通过。
+Linux 上可能还需要执行 `npx playwright install --with-deps chromium` 以安装浏览器系统依赖。提交 `b435db1` 的[已验证 CI 运行](https://github.com/loufengzh/foliohush/actions/runs/37284170780)通过了全部 24 项桌面／移动模拟 Chromium 测试。在线演示还完成了桌面端选区、链接和刷新检查，桌面与移动端截图也经过视觉检查。验证范围和未覆盖事项见[验证记录（英文）](verification.md)。后续提交需以各自的 CI 结果为准。
 
 - [架构与组件接入（英文）](architecture.md)
 - [贡献指南（英文）](../CONTRIBUTING.md)

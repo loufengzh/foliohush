@@ -119,3 +119,33 @@ it('rejects unsupported transactions before they replace the draft', async () =>
   expect(editor.getText()).toBe('Keep this sentence')
   expect(onRejectedEdit).toHaveBeenCalled()
 })
+it('does not treat mounting or editability changes as document edits', async () => {
+  const onChange = vi.fn()
+  const onReady = (instance: Editor) => {
+    editor = instance
+  }
+  const { rerender } = render(
+    <FolioEditor initialContent={EMPTY_CONTENT} onReady={onReady} onChange={onChange} />,
+  )
+  await waitFor(() => expect(editor).toBeDefined())
+  expect(onChange).not.toHaveBeenCalled()
+  rerender(
+    <FolioEditor
+      initialContent={EMPTY_CONTENT}
+      editable={false}
+      onReady={onReady}
+      onChange={onChange}
+    />,
+  )
+  await waitFor(() => expect(editor.isEditable).toBe(false))
+  expect(onChange).not.toHaveBeenCalled()
+  rerender(
+    <FolioEditor initialContent={EMPTY_CONTENT} editable onReady={onReady} onChange={onChange} />,
+  )
+  await waitFor(() => expect(editor.isEditable).toBe(true))
+  expect(onChange).not.toHaveBeenCalled()
+  act(() => {
+    editor.commands.insertContent('An actual edit')
+  })
+  expect(onChange).toHaveBeenCalledTimes(1)
+})

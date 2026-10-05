@@ -6,6 +6,10 @@ Foliohush is a local-first writing app with an editorial layout, thoughtful typo
 
 [简体中文](docs/README.zh-CN.md) · [Русский](docs/README.ru.md) · [Deutsch](docs/README.de.md)
 
+[Live demo](https://loufengzh.github.io/foliohush/) · [GitHub](https://github.com/loufengzh/foliohush) · [CI](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) · [Mobile screenshot](docs/screenshots/mobile.png)
+
+![Foliohush desktop writing workspace](docs/screenshots/desktop.png)
+
 ## What is here
 
 - **A comfortable writing desk.** A document library, title search, heading outline, focus mode, word count, and estimated reading time.
@@ -15,7 +19,7 @@ Foliohush is a local-first writing app with an editorial layout, thoughtful typo
 - **Portable copies.** JSON preserves a document and its snapshots. Markdown and HTML are reading/publishing exports. Validated JSON imports always create a new document. When saving fails, an emergency TXT export can preserve the current editor text.
 - **A reusable editor in source.** `FolioEditor` is a React component with typed callbacks, configurable placeholder text, and an editable/read-only mode.
 
-This is one application repository, not a published npm component package. The interface is currently English; the translated READMEs document the same app. No hosted demo is included.
+This is one application repository, not a published npm component package. The interface is currently English; the translated READMEs document the same app.
 
 ## Run locally
 
@@ -91,10 +95,10 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-On Linux, Playwright may also need system dependencies (`npx playwright install --with-deps chromium`). The CI workflow is configured for type checking, unit/jsdom tests, a production build, and Chromium browser tests. Real-browser execution and visual QA remain pending; jsdom is not a visual browser. See the [verification record](docs/verification.md) for the distinction. A configured workflow is not a claim that CI has run on a remote repository.
+On Linux, Playwright may also need system dependencies (`npx playwright install --with-deps chromium`). The [verified CI run](https://github.com/loufengzh/foliohush/actions/runs/37284170780) passed all 24 desktop/mobile-emulated Chromium tests at commit `b435db1`. The live demo also received desktop selection, link, and reload checks; desktop/mobile screenshots were visually reviewed. See the [verification record](docs/verification.md) for scope and remaining coverage. Later commits require their own passing CI run.
 
 - [Architecture and editor integration](docs/architecture.md): component API, document schema, persistence, and extension boundaries
-- [Verification record](docs/verification.md): check scope, browser blockers, and remaining QA
+- [Verification record](docs/verification.md): tested revisions, browser coverage, and remaining QA
 - [Contributing](CONTRIBUTING.md): development workflow and review expectations
 - [Security](SECURITY.md): threat boundaries and reporting guidance
 - [Third-party notices](THIRD_PARTY_NOTICES.md): dependency and font attribution

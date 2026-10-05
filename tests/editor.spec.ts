@@ -181,42 +181,6 @@ test('focus mode and repeated modal opening stay usable', async ({ page }) => {
   }
   await expect(body(page)).toBeVisible()
 })
-async function selectionCheckpoint(page: Page, stage: string) {
-  console.log(
-    stage,
-    await page.evaluate(() => {
-      const element = document.querySelector('.folio-editor') as
-        (HTMLElement & { editor?: Editor }) | null
-      const editor = element?.editor
-      const view = editor?.view
-      const diagnosticView = view as unknown as
-        | {
-            pluginViews?: {
-              pluginKey?: string
-              isVisible?: boolean
-              element?: HTMLElement
-              getShouldShow?: () => boolean
-            }[]
-          }
-        | undefined
-      return {
-        selection: editor?.state.selection.toJSON(),
-        focused: view?.hasFocus(),
-        composing: view?.composing,
-        nativeSelection: window.getSelection()?.toString(),
-        active: document.activeElement?.getAttribute('aria-label'),
-        menus: diagnosticView?.pluginViews
-          ?.filter((item) => item.pluginKey)
-          .map((item) => ({
-            key: String(item.pluginKey),
-            visible: item.isVisible,
-            connected: item.element?.isConnected,
-            shouldShow: item.getShouldShow?.(),
-          })),
-      }
-    }),
-  )
-}
 test('formatting selection works and unsafe links are rejected', async ({ page }) => {
   await newPage(page)
   await body(page).fill('Words to emphasize')
@@ -224,11 +188,21 @@ test('formatting selection works and unsafe links are rejected', async ({ page }
   await expect(page.getByRole('toolbar', { name: 'Format selected text' })).toBeVisible()
   await page.getByRole('button', { name: 'Bold', exact: true }).click()
   await expect(body(page).locator('strong')).toContainText('Words to emphasize')
-  await selectionCheckpoint(page, 'after-bold')
   await body(page).click()
-  await selectionCheckpoint(page, 'after-body-click')
+  // Wait for the native click to reach ProseMirror before issuing another selection.
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const element = document.querySelector('.folio-editor') as
+          (HTMLElement & { editor?: Editor }) | null
+        return !!element?.editor?.state.selection.empty && !!window.getSelection()?.isCollapsed
+      }),
+    )
+    .toBe(true)
   await body(page).press('ControlOrMeta+a')
-  await selectionCheckpoint(page, 'after-reselect')
+  await expect
+    .poll(() => page.evaluate(() => window.getSelection()?.toString()))
+    .toBe('Words to emphasize')
   await expect(page.getByRole('toolbar', { name: 'Format selected text' })).toBeVisible()
   await page.getByRole('button', { name: 'Link', exact: true }).click()
   await page.getByLabel('Link address').fill('javascript:alert(1)')
@@ -248,4 +222,21 @@ test('formatting selection works and unsafe links are rejected', async ({ page }
     .toContain('https://example.com/')
   await page.reload()
   await expect(body(page).locator('a')).toHaveAttribute('href', 'https://example.com/')
+})
+test('opening a second tab without editing does not cause a conflict', async ({
+  page,
+  context,
+}) => {
+  const raw = await page.evaluate(() => localStorage.getItem('foliohush.workspace.v1'))
+  const second = await context.newPage()
+  await second.goto('/')
+  await expect(body(second)).toBeVisible()
+  await expect(second.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled()
+  expect(await second.evaluate(() => localStorage.getItem('foliohush.workspace.v1'))).toBe(raw)
+  await expect(page.getByRole('alert')).toHaveCount(0)
+  await body(page).fill('The original tab is still writable')
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem('foliohush.workspace.v1')))
+    .toContain('The original tab is still writable')
+  await second.close()
 })

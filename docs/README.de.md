@@ -6,6 +6,10 @@ Foliohush ist eine Schreibanwendung mit lokaler Speicherung, großzügigem Layou
 
 [English](../README.md) · [简体中文](README.zh-CN.md) · [Русский](README.ru.md) · Deutsch
 
+[Live-Demo](https://loufengzh.github.io/foliohush/) · [GitHub](https://github.com/loufengzh/foliohush) · [CI](https://github.com/loufengzh/foliohush/actions/workflows/ci.yml) · [Mobiler Screenshot](screenshots/mobile.png)
+
+![Foliohush-Schreiboberfläche auf dem Desktop](screenshots/desktop.png)
+
 ## Funktionen
 
 - **Ein übersichtlicher Schreibtisch.** Dokumentenliste, Titelsuche, Überschriftennavigation, Fokusmodus, Wortzahl und geschätzte Lesezeit.
@@ -15,7 +19,7 @@ Foliohush ist eine Schreibanwendung mit lokaler Speicherung, großzügigem Layou
 - **Dateien zum Mitnehmen.** JSON enthält ein Dokument samt Snapshots. Markdown und HTML dienen zum Lesen oder zur weiteren Veröffentlichung. Ein geprüfter JSON-Import erstellt immer ein neues Dokument. Bei Speicherfehlern kann ein TXT-Notfallexport den aktuellen Editorinhalt retten.
 - **Wiederverwendbarer Quellcode.** Die React-Komponente `FolioEditor` bietet typisierte Callbacks, anpassbaren Platzhaltertext und einen bearbeitbaren beziehungsweise schreibgeschützten Modus.
 
-Dies ist ein einzelnes Anwendungsrepository, kein veröffentlichtes npm-Komponentenpaket. Eine gehostete Live-Demo gehört nicht zum Lieferumfang. Die Benutzeroberfläche ist derzeit englisch; diese README übersetzt die Dokumentation, nicht die Oberfläche.
+Dies ist ein einzelnes Anwendungsrepository, kein veröffentlichtes npm-Komponentenpaket. Die Benutzeroberfläche ist derzeit englisch; diese README übersetzt die Dokumentation, nicht die Oberfläche.
 
 ## Lokal starten
 
@@ -89,7 +93,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Unter Linux können zusätzliche Systemabhängigkeiten nötig sein: `npx playwright install --with-deps chromium`. Der CI-Workflow ist für Typprüfung, Unit-/jsdom-Tests, Produktions-Build und Chromium-Browsertests konfiguriert. Tests im echten Browser und die visuelle Prüfung stehen noch aus; jsdom ersetzt beides nicht. Siehe [Prüfprotokoll, Englisch](verification.md). Eine vorhandene Konfiguration bedeutet nicht, dass entfernte CI-Läufe bereits erfolgreich waren.
+Unter Linux können zusätzliche Systemabhängigkeiten nötig sein: `npx playwright install --with-deps chromium`. Im [verifizierten CI-Lauf](https://github.com/loufengzh/foliohush/actions/runs/37284170780) bestanden alle 24 Chromium-Tests für Desktop und mobile Emulation am Commit `b435db1`. In der Live-Demo wurden außerdem Textauswahl, Links und Neuladen am Desktop geprüft; Desktop- und mobile Screenshots wurden visuell kontrolliert. Umfang und offene Abdeckung stehen im [Prüfprotokoll, Englisch](verification.md). Spätere Commits benötigen einen eigenen erfolgreichen CI-Lauf.
 
 - [Architektur und Komponentenintegration, Englisch](architecture.md)
 - [Beitragsleitfaden, Englisch](../CONTRIBUTING.md)

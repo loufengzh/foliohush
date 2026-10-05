@@ -186,3 +186,12 @@ it('concurrent imports cannot overflow the workspace capacity', async () => {
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   expect(screen.getByRole('status')).toHaveTextContent('Import was not added')
 })
+it('opening a stored draft preserves its modification timestamp', async () => {
+  const { createDocument, createWorkspace } = await import('./lib/documents')
+  const timestamp = '2026-01-01T00:00:00.000Z'
+  const draft = createDocument('An existing draft', undefined, timestamp)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(createWorkspace([draft])))
+  await mount()
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Undo' })).toBeDisabled())
+  expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).documents[0].updatedAt).toBe(timestamp)
+})
