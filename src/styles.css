@@ -351,12 +351,6 @@ button:hover:not(:disabled) {
 .sidebar-footer span:first-child {
   max-width: 185px;
 }
-.sidebar-close,
-.mobile-menu,
-.focus-back,
-.sidebar-scrim {
-  display: none;
-}
 
 /* The writing desk: distinct tools, a quiet page, and readable status. */
 .main-workspace {
@@ -378,6 +372,7 @@ button:hover:not(:disabled) {
   gap: 20px;
 }
 .breadcrumb {
+  flex: 1;
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -389,6 +384,8 @@ button:hover:not(:disabled) {
   white-space: nowrap;
 }
 .breadcrumb-document {
+  flex: 1;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -402,12 +399,15 @@ button:hover:not(:disabled) {
   white-space: nowrap;
 }
 .breadcrumb strong {
+  display: block;
+  width: 100%;
+  min-width: 0;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--ink);
-  max-width: 300px;
+  max-width: 100%;
 }
 .breadcrumb-slash {
   color: var(--line);
@@ -875,6 +875,13 @@ select option {
 }
 .save-state.unsaved {
   color: var(--error);
+}
+/* Hide conditional navigation after the base icon-button display rule. */
+.sidebar-close,
+.mobile-menu,
+.focus-back,
+.sidebar-scrim {
+  display: none;
 }
 .focus-mode .sidebar,
 .focus-mode .outline {
@@ -1723,7 +1730,7 @@ select option {
     padding: 0;
     width: 44px;
   }
-  .breadcrumb strong {
+  .breadcrumb-document {
     max-width: 240px;
   }
   .desk-layout {
@@ -1752,7 +1759,7 @@ select option {
   .breadcrumb > span:not(.breadcrumb-document) {
     display: none;
   }
-  .breadcrumb strong {
+  .breadcrumb-document {
     max-width: 190px;
   }
   .desk-layout {
@@ -1774,8 +1781,8 @@ select option {
   .breadcrumb {
     flex-basis: 100%;
   }
-  .breadcrumb strong {
-    max-width: 100%;
+  .breadcrumb-document {
+    max-width: none;
   }
   .topbar-actions {
     width: 100%;
@@ -1864,9 +1871,11 @@ select option {
     min-height: 44px;
     gap: 10px;
   }
+  .breadcrumb-document {
+    max-width: none;
+  }
   .breadcrumb strong {
     font-size: 15px;
-    max-width: calc(100vw - 94px);
   }
   .breadcrumb > span:not(.breadcrumb-document) {
     display: none;

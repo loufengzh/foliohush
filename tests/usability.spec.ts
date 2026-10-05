@@ -314,6 +314,47 @@ test('assistant preview keeps review actions and close reachable while content s
   await expect(page.getByRole('region', { name: 'Suggestion preview' })).toHaveCount(0)
 })
 
+test('navigation controls follow viewport and focus-mode visibility', async ({
+  page,
+}, testInfo) => {
+  const mobile = testInfo.project.name === 'mobile'
+  const menu = page.getByRole('button', { name: 'Open document sidebar', exact: true })
+  const closeSidebar = page.getByRole('button', { name: 'Close sidebar', exact: true })
+  const focusBack = page.locator('.focus-back')
+
+  async function expectNormalNavigation() {
+    await expect(focusBack).toBeHidden()
+    await expect(page.getByRole('button', { name: 'Exit focus mode', exact: true })).toBeHidden()
+    await expect(closeSidebar).toBeHidden()
+    if (mobile) await expect(menu).toBeVisible()
+    else await expect(menu).toBeHidden()
+  }
+
+  await expectNormalNavigation()
+  await page.getByRole('button', { name: 'Enter focus mode', exact: true }).click()
+  await expect(page.locator('.app-shell')).toHaveClass(/focus-mode/)
+  await expect(menu).toBeHidden()
+  await expect(closeSidebar).toBeHidden()
+  await expect(focusBack).toHaveCount(1)
+  await expect(focusBack).toBeVisible()
+  // The separate header focus toggle also has this accessible name in focus mode.
+  await page
+    .locator('.breadcrumb')
+    .getByRole('button', { name: 'Exit focus mode', exact: true })
+    .click()
+  await expect(page.locator('.app-shell')).not.toHaveClass(/focus-mode/)
+  await expectNormalNavigation()
+  await expect(page.getByRole('button', { name: 'Enter focus mode', exact: true })).toBeVisible()
+  await expect(editorBody(page)).toBeVisible()
+
+  if (mobile) {
+    await menu.click()
+    await expect(closeSidebar).toBeVisible()
+    await closeSidebar.click()
+    await expectNormalNavigation()
+  }
+})
+
 test('dialogs and editing menus stay readable, tappable, and within the viewport', async ({
   page,
 }, testInfo) => {
