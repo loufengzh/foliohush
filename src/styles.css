@@ -365,6 +365,9 @@ button:hover:not(:disabled) {
   background: color-mix(in srgb, var(--sidebar) 62%, var(--paper));
 }
 .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   min-height: 80px;
   padding: 16px 28px;
   border-bottom: 1px solid var(--line);
@@ -383,6 +386,19 @@ button:hover:not(:disabled) {
   min-width: 0;
 }
 .breadcrumb > span:first-of-type {
+  white-space: nowrap;
+}
+.breadcrumb-document {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 4px;
+}
+.breadcrumb-document .save-state {
+  font-size: 13px;
+  line-height: 1.3;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 .breadcrumb strong {
@@ -742,7 +758,7 @@ select option {
 }
 .outline {
   position: sticky;
-  top: 28px;
+  top: 108px;
   padding-top: 22px;
 }
 .outline-heading {
@@ -821,11 +837,7 @@ select option {
   align-items: center;
   gap: 8px;
 }
-.desk-footer > span:first-child:not(.save-state) {
-  font-size: 11px;
-  letter-spacing: 0.8px;
-}
-.desk-footer > span:nth-child(2),
+
 .desk-footer .footer-stats {
   margin-left: auto;
   font-size: 12px;
@@ -878,7 +890,7 @@ select option {
 .focus-mode .focus-back {
   display: flex;
 }
-.focus-mode .breadcrumb > span,
+.focus-mode .breadcrumb > span:not(.breadcrumb-document),
 .focus-mode .breadcrumb strong {
   display: none;
 }
@@ -1737,7 +1749,7 @@ select option {
     padding-left: 24px;
     padding-right: 24px;
   }
-  .breadcrumb > span {
+  .breadcrumb > span:not(.breadcrumb-document) {
     display: none;
   }
   .breadcrumb strong {
@@ -1856,7 +1868,7 @@ select option {
     font-size: 15px;
     max-width: calc(100vw - 94px);
   }
-  .breadcrumb > span {
+  .breadcrumb > span:not(.breadcrumb-document) {
     display: none;
   }
   .topbar-actions {
@@ -1958,16 +1970,10 @@ select option {
     gap: 10px;
     flex-wrap: wrap;
   }
-  .desk-footer > span:first-child:not(.save-state) {
-    display: none;
-  }
-  .desk-footer > span:nth-child(2),
+
   .desk-footer .footer-stats {
     font-size: 12px;
     gap: 7px;
-  }
-  .save-state {
-    font-size: 12px;
   }
   .dialog {
     padding: 24px;
@@ -2100,9 +2106,6 @@ select option {
   }
   .desk-footer {
     gap: 8px;
-  }
-  .desk-footer .footer-stats {
-    margin-left: 0;
   }
   .desk-footer > button {
     margin-left: auto;

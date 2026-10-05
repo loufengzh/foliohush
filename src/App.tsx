@@ -527,7 +527,16 @@ export default function App() {
             </button>
             <span>My writing</span>
             <span className="breadcrumb-slash">/</span>
-            <strong>{current.title || 'Untitled'}</strong>
+            <div className="breadcrumb-document">
+              <strong>{current.title || 'Untitled'}</strong>
+              <span
+                className={`save-state ${saved ? '' : 'unsaved'}`}
+                title="Stored in this browser only"
+              >
+                {saved ? <Check size={13} /> : <Clock3 size={13} />}
+                <span>{saved ? 'Saved on this device' : 'Not saved'}</span>
+              </span>
+            </div>
           </div>
           <div className="topbar-actions">
             <button
@@ -736,14 +745,6 @@ export default function App() {
           </aside>
         </div>
         <footer className="desk-footer">
-          <span
-            className={`save-state ${saved ? '' : 'unsaved'}`}
-            title="Stored in this browser only"
-          >
-            {saved ? <Check size={13} /> : <Clock3 size={13} />}
-            <span>{saved ? 'Saved on this device' : 'Not saved'}</span>
-          </span>
-
           <span className="footer-stats">
             {words} words <i /> {Math.max(1, Math.ceil(words / 220))} min read
           </span>
